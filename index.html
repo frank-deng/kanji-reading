@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='UTF-8'/>
+		<title>Japanese Kanji Readings</title>
+	</head>
+	<body>
+		<form id='form_input' action='#'>
+			<input type='text' name='kanji_search' placeholder='Input Kanji'/>
+			<button type='submit'>Search</button>
+		</form>
+	</body>
+	<script>
+'use strict'
+var kanjiData = null;
+var xhr=new XMLHttpRequest();
+xhr.addEventListener('readystatechange', function(){
+	if (this.readyState == 4 && this.status == 200) {
+		kanjiData = JSON.parse(this.responseText);
+		console.log(kanjiData);
+	}
+});
+xhr.open('GET', 'readings.json');
+xhr.send();
+document.getElementById('form_input').addEventListener('submit', function(e){
+	var kanji = e.target[0].value;
+	var kanjiIdx = kanji.charCodeAt(0).toString(16);
+	alert('On: '+kanjiData[kanjiIdx]['on'].join(',')+'\n'+'Kun: '+kanjiData[kanjiIdx]['kun'].join(','));
+	return false;
+});
+	</script>
+</html>
+
