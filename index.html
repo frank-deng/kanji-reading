@@ -4,31 +4,51 @@
 		<meta name='viewport' id='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
 		<meta charset='UTF-8'/>
 		<title>Japanese Kanji Readings</title>
+		<script type='text/javascript' src='js/underscore-min.js'></script>
 	</head>
 	<body>
-		<div>
-			<input type='text' id='kanji_search' placeholder='Input Kanji'/>
-			<button id='do_search'>Search</button>
+		<div><input type='text' id='kanji_search' placeholder='Loading...' disabled='disabled'/></div>
+		<div id='show_result'>
 		</div>
 	</body>
+	<script type='text/template' id='show_result_template'>
+<table>
+	<% if (data.on) { %>
+		<tr><td>On Reading:</td><td><%-data.on.join(', ')%></td></tr>
+	<% } %>
+	<% if (data.kun) { %>
+		<tr><td>Kun Reading:</td><td><%-data.kun.join(', ')%></td></tr>
+	<% } %>
+</table>
+	</script>
 	<script>
 'use strict'
 var kanjiData = null;
+var kanji_search = document.getElementById('kanji_search');
+var show_result = document.getElementById('show_result');
+var show_result_func = _.template(document.getElementById('show_result_template').innerHTML);
+
+kanji_search.addEventListener('input', function(e){
+	var kanji = document.getElementById('kanji_search').value;
+	var kanjiIdx = kanji.charCodeAt(0).toString(16).toUpperCase();
+	if (kanjiData[kanjiIdx]) {
+		show_result.innerHTML = show_result_func({data:kanjiData[kanjiIdx]});
+	} else {
+		console.log(kanjiIdx);
+		show_result.innerHTML = '';
+	}
+});
+
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
 	if (this.readyState == 4 && this.status == 200) {
 		kanjiData = JSON.parse(this.responseText);
-		console.log(kanjiData);
+		kanji_search.removeAttribute('disabled');
+		kanji_search.setAttribute('placeholder', 'Input Kanji');
 	}
 });
 xhr.open('GET', 'readings.json');
 xhr.send();
-document.getElementById('do_search').addEventListener('click', function(e){
-	var kanji = document.getElementById('kanji_search').value;
-	var kanjiIdx = kanji.charCodeAt(0).toString(16);
-	alert('On: '+kanjiData[kanjiIdx]['on'].join(',')+'\n'+'Kun: '+kanjiData[kanjiIdx]['kun'].join(','));
-	return false;
-});
 	</script>
 </html>
 
