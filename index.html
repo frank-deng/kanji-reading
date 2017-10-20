@@ -12,32 +12,48 @@
 		</div>
 	</body>
 	<script type='text/template' id='show_result_template'>
-<table>
-	<% if (data.on) { %>
-		<tr><td>On Reading:</td><td><%-data.on.join(', ')%></td></tr>
-	<% } %>
-	<% if (data.kun) { %>
-		<tr><td>Kun Reading:</td><td><%-data.kun.join(', ')%></td></tr>
-	<% } %>
-</table>
+<% for (var i = 0; i < data.length; i++) { %>
+	<% var kanjiData = data[i];%>
+	<h3><%-kanjiData.kanji%></h3>
+	<table>
+		<% if (kanjiData.on) { %>
+			<tr><td>On Reading:</td><td><%-kanjiData.on.join(', ')%></td></tr>
+		<% } %>
+		<% if (kanjiData.kun) { %>
+			<tr><td>Kun Reading:</td><td><%-kanjiData.kun.join(', ')%></td></tr>
+		<% } %>
+	</table>
+<% } %>
 	</script>
 	<script>
 'use strict'
 var kanjiData = null;
+function getKanjiReading(text) {
+	if ('string' !== typeof text) {
+		return undefined;
+	}
+	var dupCharChecker = {};
+	var result = [];
+	for (var i = 0; i < text.length; i++) {
+		var kanji = text.charAt(i);
+		var kanjiCode = text.charCodeAt(i).toString(16).toUpperCase();
+		var kanjiReading = _.clone(kanjiData[kanjiCode]);
+		if (kanjiReading && !dupCharChecker[kanji]) {
+			dupCharChecker[kanji] = true;
+			kanjiReading['kanji'] = kanji;
+			result.push(kanjiReading);
+		}
+	}
+	return result;
+}
+
 var kanji_search = document.getElementById('kanji_search');
 var show_result = document.getElementById('show_result');
-var show_result_func = _.template(document.getElementById('show_result_template').innerHTML);
+var displayKanjiReading = _.template(document.getElementById('show_result_template').innerHTML);
 
-kanji_search.addEventListener('input', function(e){
-	var kanji = document.getElementById('kanji_search').value;
-	var kanjiIdx = kanji.charCodeAt(0).toString(16).toUpperCase();
-	if (kanjiData[kanjiIdx]) {
-		show_result.innerHTML = show_result_func({data:kanjiData[kanjiIdx]});
-	} else {
-		console.log(kanjiIdx);
-		show_result.innerHTML = '';
-	}
-});
+kanji_search.addEventListener('input', _.throttle(function(e){
+	show_result.innerHTML = displayKanjiReading({data:getKanjiReading(document.getElementById('kanji_search').value)});
+}, 100));
 
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
