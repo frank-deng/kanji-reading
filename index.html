@@ -19,17 +19,24 @@ body{
 .main-input{
 	margin:0;
 	padding:10px;
-	height:24px;
 	background-color:#c3829e;
 }
 #kanji_search{
 	width:calc(100% - 10px);
 	margin:0;
 	padding:0 5px;
-	line-height:24px;
+	line-height:28px;
+	height:28px;
+	font-size:16px;
 	border:none;
 	color:#562135;
 	background:#ffe7de;
+}
+#kanji_search::-webkit-input-placeholder{
+	color:#c3829e;
+}
+#kanji_search::-moz-input-placeholder{
+	color:#c3829e;
 }
 #kanji_search:-webkit-autofill,#kanji_search:-webkit-autofill:focus{
 	-webkit-box-shadow:0 0 0px 1000px #ffe7de inset!important;
