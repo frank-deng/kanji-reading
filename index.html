@@ -48,6 +48,11 @@ body{
 .frame-result h3{
 	padding:0;
 	margin:0;
+	font-size:18px;
+}
+.frame-result .simplified-char{
+	font-size:14px;
+	color:#c3829e;
 }
 hr{
 	border:none;
@@ -101,7 +106,11 @@ body[loading] #show_loading{
 	<script type='text/template' id='show_result_template'>
 <% for (var i = 0; i < data.length; i++) { %>
 	<% var kanjiData = data[i];%>
-	<h3><%-kanjiData.kanji%></h3>
+	<h3><%-kanjiData.kanji%><%
+		if (kanjiData.origInput) {
+			%><span class='simplified-char'>（<%-kanjiData.origInput%>）</span><%
+		}
+	%></h3>
 	<table>
 		<% if (kanjiData.on) { %>
 			<tr><td>On Reading:</td><td><%-kanjiData.on.join(', ')%></td></tr>
@@ -116,8 +125,41 @@ body[loading] #show_loading{
 <% } %>
 	</script>
 	<script>
+'use strict'
 function KanjiReading(data) {
 	var kanjiData = data;
+	var getKanjiReading = function(character) {
+		var kanjiCode = character.charCodeAt(0).toString(16).toUpperCase();
+
+		//Kanji found
+		var kanjiReading = kanjiData.r[kanjiCode];
+		if (kanjiReading) {
+			var result = {
+				on:kanjiReading.on,
+				kun:kanjiReading.kun,
+			}
+			result['kanji'] = character;
+			return result;
+		}
+
+		//Character with Kanji varient found
+		var kanjiCode = kanjiData.v[kanjiCode];
+		if (!kanjiCode) {
+			return undefined;
+		}
+
+		kanjiReading = kanjiData.r[kanjiCode];
+		if (kanjiReading) {
+			return {
+				kanji:String.fromCharCode(parseInt(kanjiCode, 16)),
+				origInput:character,
+				on:kanjiReading.on,
+				kun:kanjiReading.kun,
+			};
+		}
+
+		return undefined;
+	}
 	this.getFromText = function(text) {
 		if ('string' !== typeof text) {
 			return undefined;
@@ -126,23 +168,19 @@ function KanjiReading(data) {
 		var result = [];
 		for (var i = 0; i < text.length; i++) {
 			var kanji = text.charAt(i);
-			var kanjiCode = text.charCodeAt(i).toString(16).toUpperCase();
-			var kanjiReading = kanjiData[kanjiCode];
-			if (kanjiReading && !dupCharChecker[kanji]) {
+			if (dupCharChecker[kanji]) {
+				continue;
+			}
+			var kanjiReading = getKanjiReading(kanji);
+			if (kanjiReading) {
 				dupCharChecker[kanji] = true;
-				result.push({
-					kanji:kanji,
-					on:kanjiReading.on,
-					kun:kanjiReading.kun,
-				});
+				result.push(kanjiReading);
 			}
 		}
 		return result;
 	}
 }
-	</script>
-	<script>
-'use strict'
+
 var kanjiReading = undefined;
 var displayKanjiReading = _.template(document.getElementById('show_result_template').innerHTML);
 
