@@ -52,18 +52,22 @@ def getVariants(filename, kanjiAll):
                 zVariants[charSrc] = charDest;
                 zVariants[charDest] = charSrc;
 
-    for charSrc in tradVariants:
-        charDest = tradVariants[charSrc];
-        if (zVariants.get(charDest)):
-            tradVariants[charSrc] = zVariants[charDest];
-    return tradVariants, zVariants;
+    #for charSrc in tradVariants:
+    #    charDest = tradVariants[charSrc];
+    #    if (zVariants.get(charDest)):
+    #        tradVariants[charSrc] = zVariants[charDest];
+    return tradVariants;
 
 if __name__ == '__main__':
     kanjiAll = getKanjiAll('./Unihan_IRGSources.txt');
     readings = getReadings('./Unihan_Readings.txt', kanjiAll);
-    variants, zvariants = getVariants('./Unihan_Variants.txt', kanjiAll);
+    variants = getVariants('./Unihan_Variants.txt', kanjiAll);
+    variants2 = {};
+    for src, dest in variants.items():
+        if (not readings.get(src)):
+            variants2[src] = dest;
     sys.stdout.write(json.dumps({
         'r':readings,
-        'v':variants,
+        'v':variants2,
     }, sort_keys=True, separators=(',', ':')));
 

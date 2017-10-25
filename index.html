@@ -114,10 +114,10 @@ body[loading] #show_loading{
 	%></h3>
 	<table>
 		<% if (kanjiData.on) { %>
-			<tr><td>On Reading:</td><td><%-kanjiData.on.join(', ')%></td></tr>
+			<tr><td>On Reading:</td><td><%-kanjiData.on.join(' ')%></td></tr>
 		<% } %>
 		<% if (kanjiData.kun) { %>
-			<tr><td>Kun Reading:</td><td><%-kanjiData.kun.join(', ')%></td></tr>
+			<tr><td>Kun Reading:</td><td><%-kanjiData.kun.join(' ')%></td></tr>
 		<% } %>
 	</table>
 	<% if (i+1 < data.length) { %>
@@ -135,9 +135,18 @@ function KanjiReading(data) {
 		//Kanji found
 		var kanjiReading = kanjiData.r[kanjiCode];
 		if (kanjiReading) {
-			var result = {
-				on:kanjiReading.on,
-				kun:kanjiReading.kun,
+			var result = {};
+			if (kanjiReading.on) {
+				result['on'] = [];
+				for (var i = 0; i < kanjiReading.on.length; i++){
+					result['on'].push(romaji2kanji(kanjiReading.on[i])+kanjiReading.on[i]);
+				}
+			}
+			if (kanjiReading.kun) {
+				result['kun'] = [];
+				for (var i = 0; i < kanjiReading.kun.length; i++){
+					result['kun'].push(romaji2kanji(kanjiReading.kun[i])+kanjiReading.kun[i]);
+				}
 			}
 			result['kanji'] = character;
 			return result;
@@ -151,12 +160,23 @@ function KanjiReading(data) {
 
 		kanjiReading = kanjiData.r[kanjiCode];
 		if (kanjiReading) {
-			return {
+			var result = {
 				kanji:String.fromCharCode(parseInt(kanjiCode, 16)),
 				origInput:character,
-				on:kanjiReading.on,
-				kun:kanjiReading.kun,
 			};
+			if (kanjiReading.on) {
+				result['on'] = [];
+				for (var i = 0; i < kanjiReading.on.length; i++){
+					result['on'].push(romaji2kanji(kanjiReading.on[i])+kanjiReading.on[i]);
+				}
+			}
+			if (kanjiReading.kun) {
+				result['kun'] = [];
+				for (var i = 0; i < kanjiReading.kun.length; i++){
+					result['kun'].push(romaji2kanji(kanjiReading.kun[i])+kanjiReading.kun[i]);
+				}
+			}
+			return result;
 		}
 
 		return undefined;
@@ -180,6 +200,48 @@ function KanjiReading(data) {
 		}
 		return result;
 	}
+}
+function romaji2kanji(romaji){
+	var romajiData = {
+		'A':'あ','I':'い','U':'う','E':'え','O':'お',
+		'KA':'か','KI':'き','KU':'く','KE':'け','KO':'こ',
+		'SA':'さ','SHI':'し','SU':'す','SE':'せ','SO':'そ',
+		'TA':'た','CHI':'ち','TSU':'つ','TE':'て','TO':'と',
+		'NA':'な','NI':'に','NU':'ぬ','NE':'ね','NO':'の',
+		'HA':'は','HI':'ひ','HU':'ふ','HE':'へ','HO':'ほ',
+		'MA':'ま','MI':'み','MU':'む','ME':'め','MO':'も',
+		'YA':'や','YU':'ゆ','YO':'よ',
+		'RA':'ら','RI':'り','RU':'る','RE':'れ','RO':'ろ',
+		'WA':'わ','WO':'を',
+		'GA':'が','GI':'ぎ','GU':'ぐ','GE':'げ','GO':'ご',
+		'ZA':'ざ','JI':'じ','ZU':'ず','ZE':'ぜ','ZO':'ぞ',
+		'DA':'だ',                  　　'DE':'で','DO':'ど',
+		'BA':'ば','BI':'び','BU':'ぶ','BE':'べ','BO':'ぼ',
+		'PA':'ぱ','PI':'ぴ','PU':'ぷ','PE':'ぺ','PO':'ぽ',
+		'KYA':'きゃ','KYU':'きゅ','KYO':'きょ','GYA':'ぎゃ','GYU':'ぎゅ','GYO':'ぎょ',
+		'SHA':'しゃ','SHU':'しゅ','SHO':'しょ','JA':'じゃ','JYA':'じゃ','JU':'じゅ','JYU':'じゅ','JO':'じょ','JYO':'じょ',
+		'CHA':'ちゃ','CHU':'ちゅ','CHO':'ちょ','DYA':'ぢゃ','DYU':'ぢゅ','DYO':'ぢょ',
+		'NYA':'にゃ','NYU':'にゅ','NYO':'にょ','HYA':'ひゃ','HYU':'ひゅ','HYO':'ひょ',
+		'BYA':'びゃ','BYU':'びゅ','BYO':'びょ','PYA':'ぴゃ','PYU':'ぴゅ','PYO':'ぴょ',
+		'MYA':'みゃ','MYU':'みゅ','MYO':'みょ','RYA':'りゃ','RYU':'りゅ','RYO':'りょ',
+		'N':'ん',
+	}
+	var result = '';
+	while (romaji.length > 0) {
+		var matched = false;
+		_.each(romajiData, function(kana, idx){
+			if (!matched && romaji.indexOf(idx) == 0) {
+				romaji = romaji.slice(idx.length);
+				result += kana;
+				matched = true;
+			}
+		});
+		if (!matched){
+			result += romaji.charAt(0);
+			romaji = romaji.slice(1);
+		}
+	}
+	return result;
 }
 
 var kanjiReading = undefined;
