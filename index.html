@@ -9,18 +9,21 @@
 body{
 	margin:0;
 	padding:0;
-	width:100%;
 	box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	color:#562135;
 	background-color:#ffe7de;
 	font-family:Sans;
+	width:100%;height:100%;
+	overflow:hidden;
 }
 .main-input{
 	margin:0;
 	padding:10px;
 	background-color:#c3829e;
+	position:fixed;
+	left:0;right:0;top:0;
 }
 #kanji_search{
 	width:calc(100% - 10px);
@@ -45,6 +48,9 @@ body{
 }
 .frame-result{
 	padding:10px;
+	overflow:auto;
+	position:fixed;
+	left:0;right:0;bottom:0;top:48px;
 }
 .frame-result h3{
 	padding:0;
@@ -97,10 +103,10 @@ body[loading] #show_loading{
 	<body loading='loading'>
 		<div class='main-input'>
 			<div class='frame-loading' id='show_loading'>
-				<div class='loading-text'>Loading...</div>
+				<div class='loading-text'>加载中……</div>
 				<div class='loading-progress' id='loading_progress'></div>
 			</div>
-			<input type='text' id='kanji_search' placeholder='Input Kanji'/>
+			<input type='text' id='kanji_search' placeholder='请输入待查询的汉字'/>
 		</div>
 		<div class='frame-result' id='show_result'></div>
 	</body>
@@ -114,10 +120,10 @@ body[loading] #show_loading{
 	%></h3>
 	<table>
 		<% if (kanjiData.on) { %>
-			<tr><td>On Reading:</td><td><%-kanjiData.on.join(' ')%></td></tr>
+			<tr><td>音读：</td><td><%-kanjiData.on.join('、')%></td></tr>
 		<% } %>
 		<% if (kanjiData.kun) { %>
-			<tr><td>Kun Reading:</td><td><%-kanjiData.kun.join(' ')%></td></tr>
+			<tr><td>训读：</td><td><%-kanjiData.kun.join('、')%></td></tr>
 		<% } %>
 	</table>
 	<% if (i+1 < data.length) { %>
@@ -139,13 +145,13 @@ function KanjiReading(data) {
 			if (kanjiReading.on) {
 				result['on'] = [];
 				for (var i = 0; i < kanjiReading.on.length; i++){
-					result['on'].push(romaji2kanji(kanjiReading.on[i])+kanjiReading.on[i]);
+					result['on'].push(romaji2kanji(kanjiReading.on[i]));
 				}
 			}
 			if (kanjiReading.kun) {
 				result['kun'] = [];
 				for (var i = 0; i < kanjiReading.kun.length; i++){
-					result['kun'].push(romaji2kanji(kanjiReading.kun[i])+kanjiReading.kun[i]);
+					result['kun'].push(romaji2kanji(kanjiReading.kun[i]));
 				}
 			}
 			result['kanji'] = character;
@@ -167,13 +173,13 @@ function KanjiReading(data) {
 			if (kanjiReading.on) {
 				result['on'] = [];
 				for (var i = 0; i < kanjiReading.on.length; i++){
-					result['on'].push(romaji2kanji(kanjiReading.on[i])+kanjiReading.on[i]);
+					result['on'].push(romaji2kanji(kanjiReading.on[i]));
 				}
 			}
 			if (kanjiReading.kun) {
 				result['kun'] = [];
 				for (var i = 0; i < kanjiReading.kun.length; i++){
-					result['kun'].push(romaji2kanji(kanjiReading.kun[i])+kanjiReading.kun[i]);
+					result['kun'].push(romaji2kanji(kanjiReading.kun[i]));
 				}
 			}
 			return result;
@@ -249,22 +255,25 @@ var displayKanjiReading = _.template(document.getElementById('show_result_templa
 
 var kanji_search = document.getElementById('kanji_search');
 var show_result = document.getElementById('show_result');
-var loading_progress = document.getElementById('loading_progress');
-kanji_search.addEventListener('input', _.throttle(function(e){
+var processInput = _.throttle(function(e){
 	if (undefined === kanjiReading) {
 		return;
 	}
 	show_result.innerHTML = displayKanjiReading({data:kanjiReading.getFromText(kanji_search.value)});
-}, 100));
+}, 100)
+kanji_search.addEventListener('input', processInput);
+kanji_search.addEventListener('keydown', processInput);
 
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
 	if (this.readyState == 4 && this.status == 200) {
 		kanjiReading = new KanjiReading(JSON.parse(this.responseText));
 		document.body.removeAttribute('loading');
+		processInput();
 	}
 });
 var timestamp = _.now();
+var loading_progress = document.getElementById('loading_progress');
 xhr.addEventListener('progress', _.throttle(function(e){
 	var now = _.now();
 	loading_progress.style.width=Math.round(e.loaded/e.total*100)+'%';
