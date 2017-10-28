@@ -6,107 +6,45 @@
 		<title>Japanese Kanji Readings</title>
 		<script type='text/javascript' src='js/underscore-min.js'></script>
 		<style type='text/css'>
-body{
-	margin:0;
-	padding:0;
-	box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	color:#562135;
-	background-color:#ffe7de;
-	font-family:Sans;
-	width:100%;height:100%;
-	overflow:hidden;
-}
-.main-input{
-	margin:0;
-	padding:10px;
-	background-color:#c3829e;
-	position:fixed;
-	left:0;right:0;top:0;
-}
-#kanji_search{
-	width:calc(100% - 10px);
-	margin:0;
-	padding:0 5px;
-	line-height:28px;
-	height:28px;
-	font-size:16px;
-	border:none;
-	color:#562135;
-	background:#ffe7de;
-}
-#kanji_search::-webkit-input-placeholder{
-	color:#c3829e;
-}
-#kanji_search::-moz-input-placeholder{
-	color:#c3829e;
-}
-#kanji_search:-webkit-autofill,#kanji_search:-webkit-autofill:focus{
-	-webkit-box-shadow:0 0 0px 1000px #ffe7de inset!important;
-	-webkit-text-fill-color:#562135;
-}
-.frame-result{
-	padding:10px;
-	overflow:auto;
-	position:fixed;
-	left:0;right:0;bottom:0;top:48px;
-}
-.frame-result h3{
-	padding:0;
-	margin:0;
-	font-size:18px;
-}
-.frame-result .simplified-char{
-	font-size:14px;
-	color:#c3829e;
-}
-hr{
-	border:none;
-	border-top:1px solid #e9b1cd;
-	margin:0;
-	padding:0;
-}
-.record-sep{
-	margin:6px 0 10px 0;
-}
-
-.frame-loading {
-	background:#562135;
-	display:none;
-	padding:0 5px;
-	height:28px;
-	line-height:28px;
-	position:relative;
-}
-.frame-loading .loading-text{
-	position:relative;
-	color:#c3829e;
-	font-size:16px;
-	z-index:10;
-}
-.frame-loading .loading-progress{
-	position:absolute;
-	left:0;top:0;
-	height:28px;
-	width:0;
-	background:#ffe7de;
-}
-body[loading] #kanji_search{
-	display:none;
-}
-body[loading] #show_loading{
-	display:block;
-}
+*:focus{outline:none;}
+body{margin:0;padding:0;color:#562135;background-color:#ffe7de;font-family:Sans;overflow:hidden;}
+.container-main,.container-loading{position:fixed;left:0;right:0;top:0;margin:0;padding:10px;background-color:#c3829e;}
+#kanji_search{border:none;margin:0;padding:0 5px;width:calc(100% - 10px - 48px);line-height:28px;height:28px;font-size:16px;color:#562135;background:#ffe7de;border-radius:4px;}
+#kanji_search::-webkit-input-placeholder{color:#c3829e;}
+#kanji_search::-moz-input-placeholder{color:#c3829e;}
+#kanji_search:-webkit-autofill,#kanji_search:-webkit-autofill:focus{-webkit-box-shadow:0 0 0px 1000px #ffe7de inset!important;-webkit-text-fill-color:#562135;}
+.menu-btn{position:absolute;right:5px;top:0;width:48px;height:48px;cursor:pointer;}
+.menu-btn svg{position:absolute;right:50%;top:50%;width:40px;height:40px;margin:-20px;}
+.frame-result{padding:10px;overflow:auto;position:fixed;left:0;right:0;bottom:0;top:48px;}
+.frame-result h3{padding:0;margin:0;font-size:18px;}
+.frame-result .simplified-char{font-size:14px;color:#c3829e;}
+hr{border:none;border-top:1px solid #e9b1cd;margin:0;padding:0;}
+.record-sep{margin:6px 0 10px 0;}
+.frame-loading{overflow:hidden;background:#562135;padding:0 5px;height:28px;line-height:28px;position:relative;border-radius:4px;}
+.frame-loading .loading-text{position:relative;z-index:10;color:#c3829e;font-size:16px;}
+.frame-loading .loading-progress{position:absolute;left:0;top:0;height:28px;width:0;background:#ffe7de;}
+.container-loading{display:none;}
+body[loading] .container-main{display:none;}
+body[loading] .container-loading{display:block;}
+.main-menu{display:none;position:fixed;top:48px;right:0;background:#562135;color:#ffe7de;padding:4px 10px;z-index:1000;}
+body[showmenu] .main-menu{display:block;}
 		</style>
 	</head>
 	<body loading='loading'>
-		<div class='main-input'>
+		<div class='container-loading'>
 			<div class='frame-loading' id='show_loading'>
 				<div class='loading-text'>加载中……</div>
 				<div class='loading-progress' id='loading_progress'></div>
 			</div>
+		</div>
+		<div class='container-main'>
 			<input type='text' id='kanji_search' placeholder='请输入待查询的汉字'/>
+			<div class='menu-btn' id='menu_btn'>
+				<svg class='menu-btn' width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1664 1344v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45z" fill="#ffe7de"/></svg>
+			</div>
+		</div>
+		<div class='main-menu' id='main_menu'>
+			Menu items
 		</div>
 		<div class='frame-result' id='show_result'></div>
 	</body>
@@ -214,7 +152,7 @@ function romaji2kanji(romaji){
 		'SA':'さ','SHI':'し','SU':'す','SE':'せ','SO':'そ',
 		'TA':'た','CHI':'ち','TSU':'つ','TE':'て','TO':'と',
 		'NA':'な','NI':'に','NU':'ぬ','NE':'ね','NO':'の',
-		'HA':'は','HI':'ひ','HU':'ふ','HE':'へ','HO':'ほ',
+		'HA':'は','HI':'ひ','HU':'ふ','FU':'ふ','HE':'へ','HO':'ほ',
 		'MA':'ま','MI':'み','MU':'む','ME':'め','MO':'も',
 		'YA':'や','YU':'ゆ','YO':'よ',
 		'RA':'ら','RI':'り','RU':'る','RE':'れ','RO':'ろ',
@@ -259,6 +197,23 @@ var displayKanjiReading = _.template(document.getElementById('show_result_templa
 
 var kanji_search = document.getElementById('kanji_search');
 var show_result = document.getElementById('show_result');
+document.getElementById('menu_btn').addEventListener('click', function(event){
+	event.stopPropagation();
+	if (document.body.getAttribute('showmenu')) {
+		document.body.removeAttribute('showmenu');
+	} else {
+		document.body.setAttribute('showmenu', 'showmenu');
+	}
+	return false;
+});
+document.getElementById('main_menu').addEventListener('click', function(event){
+	event.stopPropagation();
+	return false;
+});
+document.body.addEventListener('click', function(event){
+	document.body.removeAttribute('showmenu');
+});
+
 var processInput = _.throttle(function(e){
 	if (undefined === kanjiReading) {
 		return;
