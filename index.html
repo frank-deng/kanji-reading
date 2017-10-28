@@ -221,11 +221,12 @@ function romaji2kanji(romaji){
 		'WA':'わ','WO':'を',
 		'GA':'が','GI':'ぎ','GU':'ぐ','GE':'げ','GO':'ご',
 		'ZA':'ざ','JI':'じ','ZU':'ず','ZE':'ぜ','ZO':'ぞ',
-		'DA':'だ',                  　　'DE':'で','DO':'ど',
+		'DA':'だ','DI':'ぢ','DU':'づ','DE':'で','DO':'ど',
 		'BA':'ば','BI':'び','BU':'ぶ','BE':'べ','BO':'ぼ',
 		'PA':'ぱ','PI':'ぴ','PU':'ぷ','PE':'ぺ','PO':'ぽ',
 		'KYA':'きゃ','KYU':'きゅ','KYO':'きょ','GYA':'ぎゃ','GYU':'ぎゅ','GYO':'ぎょ',
-		'SHA':'しゃ','SHU':'しゅ','SHO':'しょ','JA':'じゃ','JYA':'じゃ','JU':'じゅ','JYU':'じゅ','JO':'じょ','JYO':'じょ',
+		'SHA':'しゃ','SHU':'しゅ','SHO':'しょ','SYA':'しゃ','SYU':'しゅ','SYO':'しょ',
+		'JA':'じゃ','JU':'じゅ','JO':'じょ','JYA':'じゃ','JYU':'じゅ','JYO':'じょ',
 		'CHA':'ちゃ','CHU':'ちゅ','CHO':'ちょ','DYA':'ぢゃ','DYU':'ぢゅ','DYO':'ぢょ',
 		'NYA':'にゃ','NYU':'にゅ','NYO':'にょ','HYA':'ひゃ','HYU':'ひゅ','HYO':'ひょ',
 		'BYA':'びゃ','BYU':'びゅ','BYO':'びょ','PYA':'ぴゃ','PYU':'ぴゅ','PYO':'ぴょ',
@@ -233,15 +234,18 @@ function romaji2kanji(romaji){
 		'N':'ん',
 	}
 	var result = '';
+	romaji = romaji.toUpperCase();
 	while (romaji.length > 0) {
 		var matched = false;
-		_.each(romajiData, function(kana, idx){
-			if (!matched && romaji.indexOf(idx) == 0) {
+		for (var idx in romajiData) {
+			var kana = romajiData[idx];
+			if (!matched && 0 == romaji.indexOf(idx)) {
 				romaji = romaji.slice(idx.length);
 				result += kana;
 				matched = true;
+				break;
 			}
-		});
+		}
 		if (!matched){
 			result += romaji.charAt(0);
 			romaji = romaji.slice(1);
@@ -262,6 +266,7 @@ var processInput = _.throttle(function(e){
 	show_result.innerHTML = displayKanjiReading({data:kanjiReading.getFromText(kanji_search.value)});
 }, 100)
 kanji_search.addEventListener('input', processInput);
+kanji_search.addEventListener('change', processInput);
 kanji_search.addEventListener('keydown', processInput);
 
 var xhr=new XMLHttpRequest();
