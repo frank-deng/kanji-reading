@@ -5,47 +5,38 @@
 		<meta charset='UTF-8'/>
 		<title>Japanese Kanji Readings</title>
 		<link rel='stylesheet' type='text/css' href='index.css'/>
-		<script type='text/javascript' src='js/underscore-min.js'></script>
+		<script type='text/javascript' src='js/vue.min.js'></script>
 	</head>
 	<body loading='loading'>
-		<div class='container-loading'>
-			<div class='frame-loading' id='show_loading'>
-				<div class='loading-text'>加载中……</div>
-				<div class='loading-progress' id='loading_progress'></div>
+		<div id='vue_master'>
+			<div class='container-loading'>
+				<div class='frame-loading' id='show_loading'>
+					<div class='loading-text'>加载中……</div>
+					<div class='loading-progress' id='loading_progress'></div>
+				</div>
 			</div>
-		</div>
-		<div class='container-main'>
-			<input type='text' id='kanji_search' placeholder='请输入待查询的汉字'/>
-			<div class='menu-btn' id='menu_btn'>
-				<svg class='menu-btn' width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1664 1344v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45z" fill="#ffe7de"/></svg>
+			<div class='container-main'>
+				<input type='text' id='kanji_search' placeholder='请输入待查询的汉字' v-model='kanji_search'/>
+				<div class='menu-btn' id='menu_btn'>
+					<svg class='menu-btn' width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1664 1344v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45z" fill="#ffe7de"/></svg>
+				</div>
 			</div>
+			<div class='main-menu' id='main_menu'>
+				Menu items
+			</div>
+			<div class='frame-result' id='show_result'></div>
+			<template id='show_result'>
+				<div v-for='kanjiData in kanjiDataAll'>
+					<h3>{{kanjiData.kanji}}<span v-if='kanjiData.origInput'>{{kanjiData.origInput}}</span></h3>
+					<table>
+						<tr v-if='kanjiData.on'><td>音读：</td><td>{{kanjiData.on.join('、')}}</td></tr>
+						<tr v-if='kanjiData.kun'><td>训读：</td><td>{{kanjiData.kun.join('、')}}</td></tr>
+					</table>
+					<hr v-if='$index < (kanjiDataAll.length - 1)'/>
+				</div>
+			</template>
 		</div>
-		<div class='main-menu' id='main_menu'>
-			Menu items
-		</div>
-		<div class='frame-result' id='show_result'></div>
 	</body>
-	<script type='text/template' id='show_result_template'>
-<% for (var i = 0; i < data.length; i++) { %>
-	<% var kanjiData = data[i];%>
-	<h3><%-kanjiData.kanji%><%
-		if (kanjiData.origInput) {
-			%><span class='simplified-char'>（<%-kanjiData.origInput%>）</span><%
-		}
-	%></h3>
-	<table>
-		<% if (kanjiData.on) { %>
-			<tr><td>音读：</td><td><%-kanjiData.on.join('、')%></td></tr>
-		<% } %>
-		<% if (kanjiData.kun) { %>
-			<tr><td>训读：</td><td><%-kanjiData.kun.join('、')%></td></tr>
-		<% } %>
-	</table>
-	<% if (i+1 < data.length) { %>
-		<hr class='record-sep'/>
-	<% } %>
-<% } %>
-	</script>
 	<script type='text/javascript' src='js/main.js'></script>
 </html>
 

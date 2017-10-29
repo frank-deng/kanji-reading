@@ -1,6 +1,9 @@
 *:focus{
 	outline:none;
 }
+template{
+	display:none;
+}
 body{
 	margin:0;
 	padding:0;
