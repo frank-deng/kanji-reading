@@ -35,9 +35,8 @@ def getReadings(filename, kanjiAll):
                 result[charCode]['on'] = data[2:];
     return result;
 
-def getVariants(filename, kanjiAll):
+def getVariants(filename, kanjiAll, readings):
     tradVariants = {};
-    zVariants = {};
     with open(filename, 'r') as f:
         for line in f:
             line = line.strip();
@@ -46,28 +45,16 @@ def getVariants(filename, kanjiAll):
             data = line.strip().split();
             charSrc = data[0].replace('U+', '');
             charDest = data[2].replace('U+', '');
-            if (data[1] == 'kTraditionalVariant'):
+            if (data[1] == 'kTraditionalVariant' and readings.get(charDest) and not readings.get(charSrc)):
                 tradVariants[charSrc] = charDest;
-            elif (data[1] == 'kZVariant' and kanjiAll.get(charSrc) and kanjiAll.get(charDest)):
-                zVariants[charSrc] = charDest;
-                zVariants[charDest] = charSrc;
-
-    #for charSrc in tradVariants:
-    #    charDest = tradVariants[charSrc];
-    #    if (zVariants.get(charDest)):
-    #        tradVariants[charSrc] = zVariants[charDest];
     return tradVariants;
 
 if __name__ == '__main__':
     kanjiAll = getKanjiAll('./Unihan_IRGSources.txt');
     readings = getReadings('./Unihan_Readings.txt', kanjiAll);
-    variants = getVariants('./Unihan_Variants.txt', kanjiAll);
-    variants2 = {};
-    for src, dest in variants.items():
-        if (not readings.get(src)):
-            variants2[src] = dest;
+    variants = getVariants('./Unihan_Variants.txt', kanjiAll, readings);
     sys.stdout.write(json.dumps({
         'r':readings,
-        'v':variants2,
+        'v':variants,
     }, sort_keys=True, separators=(',', ':')));
 
