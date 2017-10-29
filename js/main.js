@@ -176,6 +176,6 @@ var loading_progress = document.getElementById('loading_progress');
 xhr.addEventListener('progress', _.throttle(function(e){
 	loading_progress.style.width=Math.round(e.loaded/e.total*100)+'%';
 }, 50));
-xhr.open('GET', 'readings.json');
+xhr.open('GET', 'data/readings.json');
 xhr.send();
 

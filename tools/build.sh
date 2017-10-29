@@ -1,3 +1,3 @@
 #!/bin/bash
-python3 ./mkdata.py > ../readings.json
+python3 ./mkdata.py > ../data/readings.json
 
