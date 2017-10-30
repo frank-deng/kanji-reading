@@ -118,46 +118,29 @@ function romaji2kanji(romaji){
 	return result;
 }
 
-document.getElementById('menu_btn').addEventListener('click', function(event){
-	event.stopPropagation();
-	if (document.body.getAttribute('showmenu')) {
-		document.body.removeAttribute('showmenu');
-	} else {
-		document.body.setAttribute('showmenu', 'showmenu');
-	}
-	return false;
-});
-document.getElementById('main_menu').addEventListener('click', function(event){
-	event.stopPropagation();
-	return false;
-});
-document.body.addEventListener('click', function(event){
-	document.body.removeAttribute('showmenu');
-});
-
 var kanjiReading = undefined;
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
 	if (this.readyState == 4 && this.status == 200) {
 		kanjiReading = new KanjiReading(JSON.parse(this.responseText));
+		document.body.removeAttribute('loading');
+		var view = new Vue({
+			el: '#vue_master',
+			data: {
+				kanjiSearch:'',
+				kanjiData:{},
+			},
+			mounted: function(){
+			},
+			watch: {
+				kanjiSearch: function(val){
+					this.kanjiData = kanjiReading.getFromText(val);
+					console.log(kanjiReading.getFromText(val));
+				}
+			}
+		});
 	}
-});
-//var loading_progress = document.getElementById('loading_progress');
-xhr.addEventListener('progress', function(e){
-	//loading_progress.style.width=Math.round(e.loaded/e.total*100)+'%';
 });
 xhr.open('GET', 'data/readings.json');
 xhr.send();
 
-var view = new Vue({
-    el: '#vue_master',
-	data: {
-		kanjiSearch:'',
-		kanjiData:{},
-	},
-	watch: {
-		kanjiSearch: function(val){
-            this.kanjiData = kanjiReading.getFromText(val);
-		}
-	}
-})

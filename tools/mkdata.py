@@ -8,10 +8,12 @@ def getKanjiAll(filename):
     with open(filename, 'r') as f:
         for line in f:
             line = line.strip();
-            if (0 == line.find('#') or 0 ==  len(line)):
+            if (0 == line.find('#') or 0 == len(line)):
                 continue;
             data = line.strip().split();
             charCode = data[0].replace('U+', '');
+            if len(charCode) > 4:
+                continue;
             if (data[1] == 'kIRG_JSource'):
                 jsrc[charCode] = True;
     return jsrc;
@@ -25,7 +27,7 @@ def getReadings(filename, kanjiAll):
                 continue;
             data = line.strip().split();
             charCode = data[0].replace('U+', '');
-            if not kanjiAll.get(charCode):
+            if not kanjiAll.get(charCode) or len(charCode) > 4:
                 continue;
             if (data[1] in ('kJapaneseKun', 'kJapaneseOn') and None == result.get(charCode)):
                 result[charCode] = {};
@@ -45,7 +47,9 @@ def getVariants(filename, kanjiAll, readings):
             data = line.strip().split();
             charSrc = data[0].replace('U+', '');
             charDest = data[2].replace('U+', '');
-            if (data[1] == 'kTraditionalVariant' and readings.get(charDest) and not readings.get(charSrc)):
+            if len(charSrc) > 4 or len(charDest) > 4:
+                continue;
+            elif (data[1] == 'kTraditionalVariant' and readings.get(charDest) and not readings.get(charSrc)):
                 tradVariants[charSrc] = charDest;
     return tradVariants;
 
