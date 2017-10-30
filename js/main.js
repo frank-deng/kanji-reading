@@ -57,17 +57,15 @@ function KanjiReading(data) {
 		if ('string' !== typeof text) {
 			return undefined;
 		}
-		var dupCharChecker = {};
-		var result = [];
+		var result = {};
 		for (var i = 0; i < text.length; i++) {
 			var kanji = text.charAt(i);
-			if (dupCharChecker[kanji]) {
+			if (result[kanji]) {
 				continue;
 			}
 			var kanjiReading = getKanjiReading(kanji);
 			if (kanjiReading) {
-				dupCharChecker[kanji] = true;
-				result.push(kanjiReading);
+				result[kanji] = kanjiReading;
 			}
 		}
 		return result;
@@ -120,27 +118,6 @@ function romaji2kanji(romaji){
 	return result;
 }
 
-Vue.component('show-result', {
-	template: '#show_result',
-});
-var view = new Vue({
-    el: '#vue_master',
-	data {
-		kanji_search:'',
-	},
-	methods : {
-		processInput : function(){
-
-			show_result.innerHTML = displayKanjiReading({data:kanjiReading.getFromText(this.kanji_search)});
-		}
-	}
-});
-
-var kanjiReading = undefined;
-var displayKanjiReading = _.template(document.getElementById('show_result_template').innerHTML);
-
-var kanji_search = document.getElementById('kanji_search');
-var show_result = document.getElementById('show_result');
 document.getElementById('menu_btn').addEventListener('click', function(event){
 	event.stopPropagation();
 	if (document.body.getAttribute('showmenu')) {
@@ -158,24 +135,29 @@ document.body.addEventListener('click', function(event){
 	document.body.removeAttribute('showmenu');
 });
 
-var processInput = _.throttle(function(e){
-}, 100)
-kanji_search.addEventListener('input', processInput);
-kanji_search.addEventListener('change', processInput);
-kanji_search.addEventListener('keydown', processInput);
-
+var kanjiReading = undefined;
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
 	if (this.readyState == 4 && this.status == 200) {
 		kanjiReading = new KanjiReading(JSON.parse(this.responseText));
-		document.body.removeAttribute('loading');
-		processInput();
 	}
 });
-var loading_progress = document.getElementById('loading_progress');
-xhr.addEventListener('progress', _.throttle(function(e){
-	loading_progress.style.width=Math.round(e.loaded/e.total*100)+'%';
-}, 50));
+//var loading_progress = document.getElementById('loading_progress');
+xhr.addEventListener('progress', function(e){
+	//loading_progress.style.width=Math.round(e.loaded/e.total*100)+'%';
+});
 xhr.open('GET', 'data/readings.json');
 xhr.send();
 
+var view = new Vue({
+    el: '#vue_master',
+	data: {
+		kanjiSearch:'',
+		kanjiData:{},
+	},
+	watch: {
+		kanjiSearch: function(val){
+            this.kanjiData = kanjiReading.getFromText(val);
+		}
+	}
+})

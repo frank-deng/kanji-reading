@@ -5,6 +5,11 @@ template{
 	display:none;
 }
 body{
+	position:fixed;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
 	margin:0;
 	padding:0;
 	color:#562135;
@@ -25,7 +30,7 @@ body{
 	border:none;
 	margin:0;
 	padding:0 5px;
-	width:calc(100% - 10px - 48px);
+	width:calc(100% - 48px);
 	line-height:28px;
 	height:28px;
 	font-size:16px;
@@ -45,7 +50,7 @@ body{
 }
 .menu-btn{
 	position:absolute;
-	right:5px;
+	right:0px;
 	top:0;
 	width:48px;
 	height:48px;
@@ -55,18 +60,21 @@ body{
 	position:absolute;
 	right:50%;
 	top:50%;
-	width:40px;
-	height:40px;
-	margin:-20px;
+	width:28px;
+	height:28px;
+	margin:-14px;
 }
 .frame-result{
-	padding:10px;
+	padding:0 10px;
 	overflow:auto;
 	position:fixed;
 	left:0;
 	right:0;
 	bottom:0;
 	top:48px;
+}
+.frame-result .frame-kanji{
+	margin:12px 0;
 }
 .frame-result h3{
 	padding:0;
@@ -108,15 +116,6 @@ hr{
 	height:28px;
 	width:0;
 	background:#ffe7de;
-}
-.container-loading{
-	display:none;
-}
-body[loading] .container-main{
-	display:none;
-}
-body[loading] .container-loading{
-	display:block;
 }
 .main-menu{
 	display:none;
