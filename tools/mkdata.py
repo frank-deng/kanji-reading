@@ -57,8 +57,15 @@ if __name__ == '__main__':
     kanjiAll = getKanjiAll('./Unihan_IRGSources.txt');
     readings = getReadings('./Unihan_Readings.txt', kanjiAll);
     variants = getVariants('./Unihan_Variants.txt', kanjiAll, readings);
-    sys.stdout.write(json.dumps({
-        'r':readings,
-        'v':variants,
-    }, sort_keys=True, separators=(',', ':')));
+    sys.stdout.write('[Readings]\n');
+    for i,r in readings.items():
+        on, kun = '', '';
+        if r.get('on'):
+            on = ','.join(r['on']);
+        if r.get('kun'):
+            kun = ','.join(r['kun']);
+        sys.stdout.write('%s\t%s\t%s'%(i, on, kun));
+    sys.stdout.write('[Variants]\n');
+    for s,d in variants.items():
+        sys.stdout.write('%s%s\n'%(s, d));
 
