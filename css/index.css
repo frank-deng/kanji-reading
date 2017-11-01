@@ -40,7 +40,7 @@ body{
 	border:none;
 	margin:0;
 	padding:0 5px;
-	width:calc(100% - 48px);
+	width:calc(100% - 10px);
 	line-height:28px;
 	height:28px;
 	font-size:16px;
@@ -106,16 +106,6 @@ body{
 }
 .romaji{
 	font-size:50%;
-}
-.main-menu{
-	display:none;
-	position:fixed;
-	top:48px;
-	right:0;
-	background:#562135;
-	color:#ffe7de;
-	padding:4px 10px;
-	z-index:10;
 }
 #page_loading{
 	display:none;
