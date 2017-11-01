@@ -94,7 +94,7 @@ body{
 .frame-result th{
 	font-weight:normal;
 	text-align:left;
-	min-width:52px;
+	white-space:nowrap;
 }
 .simplified-char{
 	font-size:14px;

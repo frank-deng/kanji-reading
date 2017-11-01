@@ -188,6 +188,35 @@ function KanjiReading(data) {
 	}
 }
 
+var langData = function(){
+	var data = {
+        zh:{
+            title:'日文汉字读音查询工具',
+		    prompt:'请输入待查询的汉字',
+            onReading:'音读：',
+            kunReading:'训读：',
+        },
+        en:{
+            title:'Japanese Kanji Readings',
+		    prompt:'Input Kanji',
+            onReading:'On Reading: ',
+            kunReading:'Kun Reading: ',
+        },
+        ja:{
+            title:'漢字の読み方',
+		    prompt:'漢字を入力してください',
+            onReading:'音読み：',
+            kunReading:'訓読み：',
+        },
+    };
+	var lang = (navigator.language || navigator.userLanguage).slice(0,2);
+	if (!data[lang]) {
+		lang = 'en';
+    }
+	return data[lang];
+}
+document.title = langData().title;
+
 var kanjiReading = undefined;
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
@@ -199,6 +228,7 @@ xhr.addEventListener('readystatechange', function(){
 		var view = new Vue({
 			el: '#vue_master',
 			data: {
+				lang:langData(),
 				kanjiSearch:'',
 				kanjiData:{},
 			},
