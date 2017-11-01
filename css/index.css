@@ -58,22 +58,6 @@ body{
 	-webkit-box-shadow:0 0 0px 1000px #ffe7de inset!important;
 	-webkit-text-fill-color:#562135;
 }
-.menu-btn{
-	position:absolute;
-	right:0px;
-	top:0;
-	width:48px;
-	height:48px;
-	cursor:pointer;
-}
-.menu-btn svg{
-	position:absolute;
-	right:50%;
-	top:50%;
-	width:28px;
-	height:28px;
-	margin:-14px;
-}
 .frame-result{
 	padding:0 10px;
 	overflow:auto;
