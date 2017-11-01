@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name='viewport' id='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
 		<meta charset='UTF-8'/>
+		<meta name='viewport' id='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
+		<meta name="description" content="A simple dictionary for searching the On Readings and Kun Readings for kanji characters."/>
 		<title>Japanese Kanji Readings</title>
 		<link rel='stylesheet' type='text/css' href='css/index.css?v=005'/>
+		<link rel="prefetch" href="data/readings.txt"/>
+		<link rel="preload" href="js/main.js"/>
 		<script type='text/javascript'>
 window.addEventListener('error', function(e){
 	alert(e.filename+'\nLine '+e.lineno+'\n'+e.message);
