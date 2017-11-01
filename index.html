@@ -4,7 +4,7 @@
 		<meta name='viewport' id='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
 		<meta charset='UTF-8'/>
 		<title>日文汉字读音查询工具</title>
-		<link rel='stylesheet' type='text/css' href='css/index.css?v=002'/>
+		<link rel='stylesheet' type='text/css' href='css/index.css?v=003'/>
 		<script type='text/javascript'>
 window.addEventListener('error', function(e){
 	alert(e.filename+'\nLine '+e.lineno+'\n'+e.message);
@@ -28,10 +28,14 @@ window.addEventListener('error', function(e){
 			</div>
 			<div class='frame-result'>
 				<div class='frame-kanji' v-for='kanji in kanjiData'>
-					<h3><span v-text='kanji.kanji'></span><span class='simplified-char' v-if='kanji.origInput'>（<span v-text='kanji.origInput'></span>）</span></h3>
+					<h3>{{kanji.kanji}}<span class='simplified-char' v-if='kanji.origInput'>（{{kanji.origInput}}）</span></h3>
 					<table>
-						<tr v-if='kanji.on'><td>音读：</td><td v-text='kanji.on.join("、")'></td></tr>
-						<tr v-if='kanji.kun'><td>训读：</td><td v-text='kanji.kun.join("、")'></td></tr>
+						<tr v-if='kanji.on'><td>音读：</td><td><!--
+                            --><span class='reading' v-for='on in kanji.on'>{{on}}</span><!--
+                        --></td></tr>
+                        <tr v-if='kanji.kun'><td>训读：</td><td><!--
+                            --><span class='reading' v-for='kun in kanji.kun'>{{kun}}</span><!--
+                        --></td></tr>
 					</table>
                 </div>
 			</div>

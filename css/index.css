@@ -1,8 +1,8 @@
 *:focus{
 	outline:none;
 }
-template{
-	display:none;
+td{
+	vertical-align:top;
 }
 body{
 	position:fixed;
@@ -95,14 +95,8 @@ body{
 	font-size:14px;
 	color:#c3829e;
 }
-hr{
-	border:none;
-	border-top:1px solid #e9b1cd;
-	margin:0;
-	padding:0;
-}
-.record-sep{
-	margin:6px 0 10px 0;
+.reading{
+	display:block;
 }
 .main-menu{
 	display:none;

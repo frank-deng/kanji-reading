@@ -143,7 +143,6 @@ var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
 	if (this.readyState == 4 && this.status == 200) {
 		kanjiReading = new KanjiReading(processData(this.response));
-		document.body.removeAttribute('loading');
 		var view = new Vue({
 			el: '#vue_master',
 			data: {
@@ -151,6 +150,7 @@ xhr.addEventListener('readystatechange', function(){
 				kanjiData:{},
 			},
 			mounted: function(){
+				document.body.removeAttribute('loading');
 			},
 			watch: {
 				kanjiSearch: function(val){
