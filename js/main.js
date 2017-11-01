@@ -63,6 +63,58 @@ function extractKanaData(data){
 	}
 	return result;
 }
+function kana2Romaji(kana){
+	var convtab = {
+		'あ':'A','い':'I','う':'U','え':'E','お':'O',
+        'か':'KA','き':'KI','く':'KU','け':'KE','こ':'KO',
+        'さ':'SA','し':'SHI','す':'SU','せ':'SE','そ':'SO',
+        'た':'TA','ち':'CHI','つ':'TSU','て':'TE','と':'TO',
+        'な':'NA','に':'NI','ぬ':'NU','ね':'NE','の':'NO',
+        'は':'HA','ひ':'HI','ふ':'FU','へ':'HE','ほ':'HO',
+        'ま':'MA','み':'MI','む':'MU','め':'ME','も':'MO',
+        'や':'YA','ゆ':'YU','よ':'YO',
+        'ら':'RA','り':'RI','る':'RU','れ':'RE','ろ':'RO',
+        'わ':'WA','を':'WO',
+        'が':'GA','ぎ':'GI','ぐ':'GU','げ':'GE','ご':'GO',
+        'ざ':'ZA','じ':'JI','ず':'ZU','ぜ':'ZE','ぞ':'ZO',
+        'だ':'DA','ぢ':'DI','づ':'DU','で':'DE','ど':'DO',
+        'ば':'BA','び':'BI','ぶ':'BU','べ':'BE','ぼ':'BO',
+        'ぱ':'PA','ぴ':'PI','ぷ':'PU','ぺ':'PE','ぽ':'PO',
+        'きゃ':'KYA','きゅ':'KYU','きょ':'KYO',
+        'ぎゃ':'GYA','ぎゅ':'GYU','ぎょ':'GYO',
+        'しゃ':'SHA','しゅ':'SHU','しょ':'SHO',
+        'じゃ':'JA','じゅ':'JU','じょ':'JO',
+        'ちゃ':'CHA','ちゅ':'CHU','ちょ':'CHO',
+        'ぢゃ':'DYA','ぢゅ':'DYU','ぢょ':'DYO',
+        'にゃ':'NYA','にゅ':'NYU','にょ':'NYO',
+        'ひゃ':'HYA','ひゅ':'HYU','ひょ':'HYO',
+        'びゃ':'BYA','びゅ':'BYU','びょ':'BYO',
+        'ぴゃ':'PYA','ぴゅ':'PYU','ぴょ':'PYO',
+        'みゃ':'MYA','みゅ':'MYU','みょ':'MYO',
+        'りゃ':'RYA','りゅ':'RYU','りょ':'RYO',
+        'ふぁ':'FA','ふぃ':'FI','ふぇ':'FE','ふぉ':'FO',
+        'ん':'N',
+	}
+	var result = '';
+	while (kana.length > 0) {
+		var m1 = kana.charAt(0);
+		var m2 = kana.slice(0,2);
+		if ('っ' == m1) {
+			result += '@';
+			kana = kana.slice(1);
+	    } else if (2 == m2.length && convtab[m2]) {
+		    result += convtab[m2];
+		    kana = kana.slice(2);
+		} else if (1 == m1.length && convtab[m1]) {
+		    result += convtab[m1];
+		    kana = kana.slice(1);
+        } else {
+            result += kana.charAt(0);
+            kana = kana.slice(1);
+        }
+    }
+    return result.replace(/@(\w)/g, '$1$1');
+}
 function KanjiReading(data) {
 	var kanjiData = data;
 	var getKanjiReading = function(character) {
@@ -88,7 +140,7 @@ function KanjiReading(data) {
 			return result;
 		}
 
-		//Character with Kanji varient found
+		//Character with Kanji variant found
 		var kanjiCode = kanjiData.v[kanjiCode];
 		if (!kanjiCode) {
 			return undefined;
@@ -124,11 +176,9 @@ function KanjiReading(data) {
 		var result = {};
 		for (var i = 0; i < text.length; i++) {
 			var kanji = text.charAt(i);
-			/*
 			if (result[kanji]) {
 				continue;
 			}
-			*/
 			var kanjiReading = getKanjiReading(kanji);
 			if (kanjiReading) {
 				result[kanji] = kanjiReading;
@@ -143,6 +193,9 @@ var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
 	if (this.readyState == 4 && this.status == 200) {
 		kanjiReading = new KanjiReading(processData(this.response));
+		Vue.filter('kana2Romaji', function(v){
+			return kana2Romaji(v);
+        });
 		var view = new Vue({
 			el: '#vue_master',
 			data: {
@@ -162,4 +215,3 @@ xhr.addEventListener('readystatechange', function(){
 });
 xhr.open('GET', 'data/readings.txt');
 xhr.send();
-

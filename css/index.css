@@ -1,7 +1,7 @@
 *:focus{
 	outline:none;
 }
-td{
+td,th{
 	vertical-align:top;
 }
 body{
@@ -91,12 +91,21 @@ body{
 	margin:0;
 	font-size:18px;
 }
-.frame-result .simplified-char{
+.frame-result th{
+	font-weight:normal;
+	text-align:left;
+	min-width:52px;
+}
+.simplified-char{
 	font-size:14px;
 	color:#c3829e;
 }
 .reading{
-	display:block;
+	display:inline-block;
+	margin:0 16px 0 0;
+}
+.romaji{
+	font-size:50%;
 }
 .main-menu{
 	display:none;
