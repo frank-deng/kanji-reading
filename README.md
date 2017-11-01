@@ -1,6 +1,7 @@
 # kanji-reading
 
-A simple dictionary for searching the On Pronunciation and Kun Pronunciation of a kanji character
+???????????????????
+
+A tool for searching on-readings and kun-readings for kanji characters.
 
 Data was gathered from [http://www.unicode.org/Public/UNIDATA/Unihan.zip](http://www.unicode.org/Public/UNIDATA/Unihan.zip)
-
