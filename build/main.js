@@ -244,9 +244,6 @@ var d = document;
 d.title = lang.get('title');
 
 var kanjiReading = undefined;
-var kanji_search = d.getElementById('kanji_search');
-kanji_search.setAttribute('placeholder', lang.get('prompt'));
-var search_result = d.getElementById('search_result');
 var drawReadings = function(td, readings){
 	for (var i=0; i<readings.length; i++) {
 		var span = d.createElement('span');
@@ -286,25 +283,16 @@ var drawKanjiRecord = function(kanji){
 	record.appendChild(table);
 	return record;
 }
-var drawRecords = function(text){
-	search_result.innerHTML = '';
+var drawRecords = function(dom,text){
+	dom.innerHTML = '';
 	if (!kanjiReading){
 		return;
 	}
 	var res = kanjiReading.getFromText(text);
 	for (var k in res) {
-		search_result.appendChild(drawKanjiRecord(res[k]));
+		dom.appendChild(drawKanjiRecord(res[k]));
 	}
 }
-kanji_search.addEventListener('input', function(){
-	drawRecords(this.value);
-});
-kanji_search.addEventListener('change', function(){
-	drawRecords(this.value);
-});
-kanji_search.addEventListener('blur', function(){
-	drawRecords(this.value);
-});
 
 var xhr=new XMLHttpRequest();
 xhr.addEventListener('readystatechange', function(){
@@ -315,4 +303,18 @@ xhr.addEventListener('readystatechange', function(){
 });
 xhr.open('GET', 'readings.txt');
 xhr.send();
+window.addEventListener('load', function(){
+	var kanji_search = d.getElementById('kanji_search');
+	var search_result = d.getElementById('search_result');
+	kanji_search.setAttribute('placeholder', lang.get('prompt'));
+	kanji_search.addEventListener('input', function(){
+		drawRecords(search_result, this.value);
+	});
+	kanji_search.addEventListener('change', function(){
+		drawRecords(search_result, this.value);
+	});
+	kanji_search.addEventListener('blur', function(){
+		drawRecords(search_result, this.value);
+	});
+});
 
