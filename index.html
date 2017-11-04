@@ -5,15 +5,9 @@
 		<meta name='viewport' id='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
 		<meta name="description" content="A tool for searching on-readings and kun-readings for kanji characters."/>
 		<title>Japanese Kanji Readings</title>
-		<link rel='stylesheet' type='text/css' href='css/index.css?v=005'/>
-		<link rel="prefetch" href="data/readings.txt"/>
-		<link rel="preload" href="js/main.js"/>
-		<script type='text/javascript'>
-window.addEventListener('error', function(e){
-	alert(e.filename+'\nLine '+e.lineno+'\n'+e.message);
-});
-        </script>
-		<script type='text/javascript' src='js/vue.min.js'></script>
+		<link rel='stylesheet' type='text/css' href='index.min.css'/>
+		<link rel="prefetch" href="readings.txt"/>
+		<link rel="preload" href="main.min.js" as="script" type='text/javascript'/>
 	</head>
 	<body loading='loading'>
 		<div id='page_loading'>
@@ -21,23 +15,10 @@ window.addEventListener('error', function(e){
 		</div>
 		<div id='vue_master'>
 			<div class='container-main'>
-				<input type='text' id='kanji_search' :placeholder='lang.prompt' v-model='kanjiSearch'/>
+				<input type='text' id='kanji_search'/>
 			</div>
-			<div class='frame-result'>
-				<div class='frame-kanji' v-for='kanji in kanjiData'>
-					<h3>{{kanji.kanji}}<span class='simplified-char' v-if='kanji.origInput'>（{{kanji.origInput}}）</span></h3>
-					<table>
-						<tr v-if='kanji.on'><th v-text='lang.onReading'></th><td><!--
-                            --><span class='reading' v-for='on in kanji.on'>{{on}} <span class='romaji'>{{on|kana2Romaji}}</span></span><!--
-                        --></td></tr>
-                        <tr v-if='kanji.kun'><th v-text='lang.kunReading'></th><td><!--
-                            --><span class='reading' v-for='kun in kanji.kun'>{{kun}}  <span class='romaji'>{{kun|kana2Romaji}}</span></span><!--
-                        --></td></tr>
-					</table>
-                </div>
-			</div>
+			<div id='search_result'></div>
 		</div>
 	</body>
-	<script type='text/javascript' src='js/main.js?v=008'></script>
+	<script type='text/javascript' src='main.min.js'></script>
 </html>
-

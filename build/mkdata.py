@@ -158,7 +158,7 @@ if __name__ == '__main__':
             on = ','.join([kanaCompress(a) for a in r['on']]);
         if r.get('kun'):
             kun = ','.join([kanaCompress(a) for a in r['kun']]);
-        sys.stdout.write('%s\t%s\t%s\n'%(base62encode(int(i, 16)), on, kun));
+        sys.stdout.write('%s%s\t%s\n'%(base62encode(int(i, 16)), on, kun));
     sys.stdout.write('[Variants]\n');
     for s in sorted(variants.keys()):
         d = variants[s];
