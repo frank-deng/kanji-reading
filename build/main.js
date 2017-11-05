@@ -231,7 +231,7 @@ var lang = new Lang({
 		title:'日文汉字读音查询工具',
 		prompt:'请输入待查询的汉字',
 		onReading:'音读:',
-		kunReading:'训读：',
+		kunReading:'训读:',
 	},
 	ja:{
 		title:'漢字の読み方',

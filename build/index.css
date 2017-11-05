@@ -28,6 +28,7 @@ body{
 	color:#562135;
 	background-color:#ffe7de;
 	font-family:Sans;
+	font-size:16px;
 	overflow:hidden;
 }
 #vue_master{
@@ -85,7 +86,7 @@ body{
 	padding:0;
 }
 #search_result h3{
-	padding:0 0 2px 0;
+	padding:0 0 8px 0;
 	margin:0;
 	font-size:18px;
 }
@@ -96,7 +97,10 @@ body{
 }
 #search_result th{
 	white-space:nowrap;
-	padding:0 4px 0 0;
+	padding:0 8px 4px 0;
+}
+#search_result td{
+	padding:0 0 4px 0;
 }
 #search_result table span{
 	display:inline-block;
