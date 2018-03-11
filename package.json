@@ -1,0 +1,24 @@
+{
+  "name": "kanji-reading",
+  "version": "1.0.0",
+  "description": "A tool for searching on-readings and kun-readings for kanjis.",
+  "main": "webpack.config.js",
+  "scripts": {
+	"build": "webpack -p",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frank-deng/kanji-reading.git"
+  },
+  "author": "Frank Deng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frank-deng/kanji-reading/issues"
+  },
+  "homepage": "https://github.com/frank-deng/kanji-reading#readme",
+  "devDependencies": {
+    "qunit-cli": "",
+    "webpack": ""
+  }
+}
