@@ -4,7 +4,7 @@
   "description": "A tool for searching on-readings and kun-readings for kanjis.",
   "main": "webpack.config.js",
   "scripts": {
-	"build": "webpack -p",
+    "build": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +17,10 @@
     "url": "https://github.com/frank-deng/kanji-reading/issues"
   },
   "homepage": "https://github.com/frank-deng/kanji-reading#readme",
+  "dependencies": {
+    "base62": "^1.2.7",
+    "lang.js": "^1.1.12"
+  },
   "devDependencies": {
     "qunit-cli": "",
     "webpack": ""

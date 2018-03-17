@@ -7,6 +7,33 @@
 		<title>Japanese Kanji Readings</title>
 		<link rel='stylesheet' type='text/css' href='index.min.css'/>
 		<script type='text/javascript' src='main.min.js'></script>
+		<script type='text/javascript' src='mobile_logger.js'></script>
+		<style>
+#logger_element{
+	display:block;
+	position:fixed;
+	left:0;
+	right:0;
+	bottom:0;
+	height:6em;
+	font-size:1em;
+	line-height:1.1em;
+	font-family:monospace;
+	font-weight:normal;
+	color:#000;
+	background-color:#ccc;
+	border-top:1px solid #000;
+	margin:0;
+	padding:0;
+	z-index:10000;
+	opacity: 0.5;
+}
+		</style>
+		<script type='text/javascript'>
+window.addEventListener('load', function(){
+	MobileLogger.bind(document.getElementById('logger_element'));
+});
+		</script>
 	</head>
 	<body loading='loading'>
 		<div id='page_loading'>
@@ -18,5 +45,6 @@
 			</div>
 			<div id='search_result'></div>
 		</div>
+		<pre id='logger_element'></pre>
 	</body>
 </html>

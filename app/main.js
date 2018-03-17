@@ -1,28 +1,6 @@
-'use strict'
-/* Master classes */
-function Lang(data){
-	var langAvail = [];
-	for (var l in data) {
-		langAvail.push(l);
-	}
-	var n = navigator;
-	var lang = (n.language || n.userLanguage).slice(0,2);
-	if (!data[lang]) {
-		lang = langAvail[0];
-    }
+import Base62, Lang from './app/util';
 
-	this.get = function(key){
-		var mainRes = data[lang][key];
-		if (mainRes) {
-			return mainRes;
-		} else {
-			return data[langAvail[0]][key];
-		}
-	}
-	this.getAll = function(){
-		return data[lang];
-	}
-}
+/* Master classes */
 function kana2Romaji(kana){
 	var convtab = {
 		'あ':'A','い':'I','う':'U','え':'E','お':'O',
@@ -146,13 +124,6 @@ function KanjiReading(data) {
 }
 
 /* Data extraction */
-function base62decode(d){
-	var n=0,D='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	for(var i=0;i<d.length;i++){
-		n=n*62+D.indexOf(d[i]);
-	}
-	return n;
-}
 function extractKanaData(data){
 	if (Array.isArray(data)) {
 		var result = [], len = data.length;
@@ -201,7 +172,7 @@ function processData(inputData){
 		} else if (text == '[Variants]') {
 			task = 'v';
 		} else if (task == 'r') {
-			var kanji = base62decode(text.slice(0,3)).toString(16).toUpperCase();
+			var kanji = Base62.decode(text.slice(0,3)).toString(16).toUpperCase();
 			var reading = text.slice(3).split('\t');
 			result['r'][kanji] = {}
 			if (reading[0]) {
@@ -211,8 +182,8 @@ function processData(inputData){
 				result['r'][kanji]['kun'] = extractKanaData(reading[1].split(','));
 			}
 		} else if (task == 'v') {
-			var charSrc = base62decode(text.slice(0,3)).toString(16).toUpperCase();
-			var charDest = base62decode(text.slice(3,6)).toString(16).toUpperCase();
+			var charSrc = Base62.decode(text.slice(0,3)).toString(16).toUpperCase();
+			var charDest = Base62.decode(text.slice(3,6)).toString(16).toUpperCase();
 			result['v'][charSrc] = charDest;
 		}
 	}
