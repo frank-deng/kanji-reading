@@ -1,61 +1,6 @@
-import Base62, Lang from './app/util';
+import {Lang, base62Decode, kanaToRomaji, extractKanaData} from './util';
 
 /* Master classes */
-function kana2Romaji(kana){
-	var convtab = {
-		'あ':'A','い':'I','う':'U','え':'E','お':'O',
-        'か':'KA','き':'KI','く':'KU','け':'KE','こ':'KO',
-        'さ':'SA','し':'SHI','す':'SU','せ':'SE','そ':'SO',
-        'た':'TA','ち':'CHI','つ':'TSU','て':'TE','と':'TO',
-        'な':'NA','に':'NI','ぬ':'NU','ね':'NE','の':'NO',
-        'は':'HA','ひ':'HI','ふ':'FU','へ':'HE','ほ':'HO',
-        'ま':'MA','み':'MI','む':'MU','め':'ME','も':'MO',
-        'や':'YA','ゆ':'YU','よ':'YO',
-        'ら':'RA','り':'RI','る':'RU','れ':'RE','ろ':'RO',
-        'わ':'WA','を':'WO',
-        'が':'GA','ぎ':'GI','ぐ':'GU','げ':'GE','ご':'GO',
-        'ざ':'ZA','じ':'JI','ず':'ZU','ぜ':'ZE','ぞ':'ZO',
-        'だ':'DA','ぢ':'DI','づ':'DU','で':'DE','ど':'DO',
-        'ば':'BA','び':'BI','ぶ':'BU','べ':'BE','ぼ':'BO',
-        'ぱ':'PA','ぴ':'PI','ぷ':'PU','ぺ':'PE','ぽ':'PO',
-        'きゃ':'KYA','きゅ':'KYU','きょ':'KYO',
-        'ぎゃ':'GYA','ぎゅ':'GYU','ぎょ':'GYO',
-        'しゃ':'SHA','しゅ':'SHU','しょ':'SHO',
-        'じゃ':'JA','じゅ':'JU','じょ':'JO',
-        'ちゃ':'CHA','ちゅ':'CHU','ちょ':'CHO',
-        'ぢゃ':'DYA','ぢゅ':'DYU','ぢょ':'DYO',
-        'にゃ':'NYA','にゅ':'NYU','にょ':'NYO',
-        'ひゃ':'HYA','ひゅ':'HYU','ひょ':'HYO',
-        'びゃ':'BYA','びゅ':'BYU','びょ':'BYO',
-        'ぴゃ':'PYA','ぴゅ':'PYU','ぴょ':'PYO',
-        'みゃ':'MYA','みゅ':'MYU','みょ':'MYO',
-        'りゃ':'RYA','りゅ':'RYU','りょ':'RYO',
-        'ふぁ':'FA','ふぃ':'FI','ふぇ':'FE','ふぉ':'FO',
-        'ん':'N',
-	}
-	var result = '';
-	if (!kana) {
-		return '';
-	}
-	while (kana.length > 0) {
-		var m1 = kana.charAt(0);
-		var m2 = kana.slice(0,2);
-		if ('っ' == m1) {
-			result += '@';
-			kana = kana.slice(1);
-	    } else if (2 == m2.length && convtab[m2]) {
-		    result += convtab[m2];
-		    kana = kana.slice(2);
-		} else if (1 == m1.length && convtab[m1]) {
-		    result += convtab[m1];
-		    kana = kana.slice(1);
-        } else {
-            result += kana.charAt(0);
-            kana = kana.slice(1);
-        }
-    }
-    return result.replace(/@(\w)/g, '$1$1');
-}
 function KanjiReading(data) {
 	var kanjiData = data;
 	var getKanjiReading = function(character) {
@@ -123,42 +68,6 @@ function KanjiReading(data) {
 	}
 }
 
-/* Data extraction */
-function extractKanaData(data){
-	if (Array.isArray(data)) {
-		var result = [], len = data.length;
-		for (var i = 0; i < len; i++) {
-			result.push(extractKanaData(data[i]));
-		}
-		return result;
-	}
-
-	var convtab = {
-		'0':'あ','1':'い','2':'う','3':'え','4':'お',
-		'5':'ぁ','6':'ぃ','7':'ぅ','8':'ぇ','9':'ぉ',
-		'A':'か','B':'き','C':'く','D':'け','E':'こ',
-		'F':'さ','G':'し','H':'す','I':'せ','J':'そ',
-		'K':'た','L':'ち','M':'つ','N':'て','O':'と',
-		'P':'な','Q':'に','R':'ぬ','S':'ね','T':'の',
-		'U':'は','V':'ひ','W':'ふ','X':'へ','Y':'ほ',
-		'Z':'ま','a':'み','b':'む','c':'め','d':'も',
-		'e':'や','f':'ゆ','g':'よ',
-		'h':'ら','i':'り','j':'る','k':'れ','l':'ろ',
-		'm':'わ','n':'を',
-		'o':'が','p':'ぎ','q':'ぐ','r':'げ','s':'ご',
-		't':'ざ','u':'じ','v':'ず','w':'ぜ','x':'ぞ',
-		'y':'だ','z':'ぢ','!':'づ','#':'で','$':'ど',
-		'%':'ば','&':'び','(':'ぶ',')':'べ','*':'ぼ',
-		'+':'ぱ','-':'ぷ','.':'ぴ','/':'ぺ',':':'ぽ',
-		';':'ん','<':'ゃ','=':'ゅ','>':'ょ','?':'っ',
-	}
-	var result = '';
-	var len = data.length;
-	for (var i = 0; i < len; i++) {
-		result += convtab[data[i]];
-	}
-	return result;
-}
 function processData(inputData){
 	var data = [];
 	data = inputData.split("\n");
@@ -172,7 +81,7 @@ function processData(inputData){
 		} else if (text == '[Variants]') {
 			task = 'v';
 		} else if (task == 'r') {
-			var kanji = Base62.decode(text.slice(0,3)).toString(16).toUpperCase();
+			var kanji = base62Decode(text.slice(0,3)).toString(16).toUpperCase();
 			var reading = text.slice(3).split('\t');
 			result['r'][kanji] = {}
 			if (reading[0]) {
@@ -182,8 +91,8 @@ function processData(inputData){
 				result['r'][kanji]['kun'] = extractKanaData(reading[1].split(','));
 			}
 		} else if (task == 'v') {
-			var charSrc = Base62.decode(text.slice(0,3)).toString(16).toUpperCase();
-			var charDest = Base62.decode(text.slice(3,6)).toString(16).toUpperCase();
+			var charSrc = base62Decode(text.slice(0,3)).toString(16).toUpperCase();
+			var charDest = base62Decode(text.slice(3,6)).toString(16).toUpperCase();
 			result['v'][charSrc] = charDest;
 		}
 	}
@@ -192,19 +101,19 @@ function processData(inputData){
 
 /* View handling */
 var lang = new Lang({
-	en:{
+	en : {
 		title:'Japanese Kanji Readings',
 		prompt:'Input Kanji',
 		onReading:'On Reading:',
 		kunReading:'Kun Reading:',
 	},
-	zh:{
+	zh : {
 		title:'日文汉字读音查询工具',
 		prompt:'请输入待查询的汉字',
 		onReading:'音读:',
 		kunReading:'训读:',
 	},
-	ja:{
+	ja : {
 		title:'漢字の読み方',
 		prompt:'漢字を入力してください',
 		onReading:'音読み:',
@@ -218,7 +127,7 @@ var kanjiReading = undefined;
 var drawReadings = function(td, readings){
 	for (var i=0; i<readings.length; i++) {
 		var span = d.createElement('span');
-		span.innerHTML = readings[i]+'<u> '+kana2Romaji(readings[i])+'</u>';
+		span.innerHTML = readings[i]+'<u> '+kanaToRomaji(readings[i])+'</u>';
 		td.appendChild(span);
 	}
 }
