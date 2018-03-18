@@ -18,18 +18,11 @@ module.exports = {
 				},
 				exclude: /node_modules/
 			},
-			{
-				test: /(\.css)$/,
-				use: {
-					loader: "css-loader"
-				},
-				exclude: /node_modules/
-			},
 		],
 	},
 	resolveLoader: {
 		alias: {
-			"demo-loader": path.resolve(__dirname, "app/css-loader.js"),
+			'css-loader': __dirname + "/app/css-loader.js",
 		},
 	},
 };
