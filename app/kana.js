@@ -105,7 +105,7 @@ export const romajiToKana = function(romaji){
 			result += convtab[m2];
 			romaji = romaji.slice(2);
 		} else if (1 == m1.length && convtab[m1]) {
-			kanaSeq += convtab[m1];
+			result += convtab[m1];
 			romaji = romaji.slice(1);
 		} else {
 			result += romaji.charAt(0);
