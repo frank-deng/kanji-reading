@@ -1,4 +1,6 @@
-import {Lang, base62Decode, kanaToRomaji, extractKanaData} from './util';
+import {Lang, base62Decode} from './util';
+import {kanaToRomaji, extractKanaData} from './kana';
+import "!css-loader?filename=index.css";
 
 /* Master classes */
 function KanjiReading(data) {

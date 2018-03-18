@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/frank-deng/kanji-reading#readme",
   "dependencies": {
+    "clean-css": "^4.1.11",
     "js-sha256": "^0.9.0"
   },
   "devDependencies": {
     "base62": "^1.2.7",
     "babel-loader": "^7.1.4",
     "qunit-cli": "",
+    "clean-css": "",
     "webpack": "",
     "webpack-cli": "^2.0.12"
   }
