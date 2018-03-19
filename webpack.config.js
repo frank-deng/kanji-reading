@@ -3,11 +3,11 @@ module.exports = [
 	{
 		mode: 'production',
 		entry: {
-			index: __dirname + '/app/main.js',
+			index: __dirname + '/app/index.js',
 		},
 		output: {
 			path: __dirname,
-			filename: 'main.min.js',
+			filename: 'index.min.js',
 		},
 		module: {
 			rules: [
