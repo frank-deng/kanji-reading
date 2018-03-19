@@ -58,6 +58,5 @@ typings/
 .env
 
 package-lock.json
-index.min.js
 gendata.temp.js
 
