@@ -6,7 +6,7 @@ module.exports = [
 			index: __dirname + '/app/main.js',
 		},
 		output: {
-			path: __dirname + '/public',
+			path: __dirname,
 			filename: 'main.min.js',
 		},
 		module: {
@@ -30,11 +30,11 @@ module.exports = [
 		mode: 'development',
 		target: "node",
 		entry: {
-			index: __dirname + '/app/kanji-reading.js',
+			index: __dirname + '/data/gendata.js',
 		},
 		output: {
-			path: __dirname + '/temp/',
-			filename: 'kanji-reading.js',
+			path: __dirname,
+			filename: 'gendata.temp.js',
 		},
 	},
 ];

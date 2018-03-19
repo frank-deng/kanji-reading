@@ -58,6 +58,5 @@ typings/
 .env
 
 package-lock.json
-public/main.min.js
-public/readings.txt
-temp
+main.min.js
+gendata.temp.js
