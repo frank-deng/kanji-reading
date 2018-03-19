@@ -73,7 +73,7 @@ function getVariants(filename, kanjiAll, readings) {
 var kanjiAll = getKanjiAll('../readings/Unihan_IRGSources.txt');
 var readings = getReadings('../readings/Unihan_Readings.txt', kanjiAll);
 var variants = getVariants('../readings/Unihan_Variants.txt', kanjiAll, readings);
-console.log('[Readings]\n');
+var output = '[Readings]\n';
 for (var i in readings) {
 	var r = readings[i];
 	var charCode = Base62.encode(parseInt(i, 16));
@@ -84,11 +84,16 @@ for (var i in readings) {
 	if (r['kun']) {
 		kun = Array.from(r['kun'], compressKanaData).join(',');
 	}
-	console.log(`${charCode}${on}\t${kun}`);
+	output += `${charCode}${on}\t${kun}\n`;
 }
-console.log('[Variants]\n');
+output += '[Variants]\n';
 for (var s in variants) {
 	var from = Base62.encode(parseInt(s, 16)), to = Base62.encode(parseInt(variants[s], 16));
-    console.log(`${from}${to}`);
+    output += `${from}${to}\n`;
 }
 
+fs.writeFile('../public/readings.txt', output, {flag:'w', encoding:'utf-8', mode:'0600'}, function(err){
+     if(err){
+         console.log("Failed to write to target file.");
+     }
+}) 
