@@ -38,5 +38,4 @@ export const base62Decode = function(str) {
 	return n;
 }
 
-import sha256 from 'js-sha256';
 

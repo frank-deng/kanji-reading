@@ -5,33 +5,6 @@
 		<meta name='viewport' id='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
 		<meta name="description" content="A tool for searching on-readings and kun-readings for kanji characters."/>
 		<title>Japanese Kanji Readings</title>
-		<script type='text/javascript' src='mobile_logger.js'></script>
-		<style>
-#logger_element{
-	display:block;
-	position:fixed;
-	left:0;
-	right:0;
-	bottom:0;
-	height:6em;
-	font-size:1em;
-	line-height:1.1em;
-	font-family:monospace;
-	font-weight:normal;
-	color:#000;
-	background-color:#ccc;
-	border-top:1px solid #000;
-	margin:0;
-	padding:0;
-	z-index:10000;
-	opacity: 0.5;
-}
-		</style>
-		<script type='text/javascript'>
-window.addEventListener('load', function(){
-	MobileLogger.bind(document.getElementById('logger_element'));
-});
-		</script>
 		<script type='text/javascript' src='index.min.js'></script>
 	</head>
 	<body loading='loading'>
@@ -44,6 +17,5 @@ window.addEventListener('load', function(){
 			</div>
 			<div id='search_result'></div>
 		</div>
-		<pre id='logger_element'></pre>
 	</body>
 </html>

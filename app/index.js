@@ -1,5 +1,6 @@
 import {Lang, base62Decode} from './util';
 import {kanaToRomaji, extractKanaData} from './kana';
+import {loadReadings, saveReadings} from './cache';
 import "!css-loader?filename=./app/index.css!";
 
 /* Master classes */
@@ -176,16 +177,29 @@ var drawRecords = function(dom,text){
 	}
 }
 
-var xhr=new XMLHttpRequest();
-xhr.addEventListener('readystatechange', function(){
-	if (this.readyState == 4 && this.status == 200) {
-		d.body.removeAttribute('loading');
-		kanjiReading = new KanjiReading(processData(this.response));
-	}
-});
-xhr.open('GET', 'readings.txt');
-xhr.send();
+//Load kanji readings data
+var readingsData = loadReadings();
+if (readingsData) {
+	kanjiReading = new KanjiReading(processData(readingsData));
+} else {
+	var xhr=new XMLHttpRequest();
+	xhr.addEventListener('readystatechange', function(){
+		if (this.readyState == 4 && this.status == 200) {
+			if (d.body) {
+				d.body.removeAttribute('loading');
+			}
+			saveReadings(this.response);
+			kanjiReading = new KanjiReading(processData(this.response));
+		}
+	});
+	xhr.open('GET', 'readings.txt');
+	xhr.send();
+}
+
 window.addEventListener('load', function(){
+	if (kanjiReading) {
+		d.body.removeAttribute('loading');
+	}
 	var kanji_search = d.getElementById('kanji_search');
 	var search_result = d.getElementById('search_result');
 	kanji_search.setAttribute('placeholder', lang.get('prompt'));
