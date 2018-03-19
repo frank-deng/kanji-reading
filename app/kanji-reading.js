@@ -51,9 +51,9 @@ function getReadings(filename, kanjiAll) {
 }
 function getVariants(filename, kanjiAll, readings) {
     var tradVariants = {};
-	var readings = new StringDecoder('utf8').write(fs.readFileSync(filename)).split('\n');
-	for (var i = 0; i < readings.length; i++) {
-		var line = readings[i].trim();
+	var variants = new StringDecoder('utf8').write(fs.readFileSync(filename)).split('\n');
+	for (var i = 0; i < variants.length; i++) {
+		var line = variants[i].trim();
 		if ('#' == line[0] || 0 == line.length) {
 			continue;
 		}
@@ -63,9 +63,11 @@ function getVariants(filename, kanjiAll, readings) {
         var charDest = data[2].replace('U+', '');
         if (charSrc.length > 4 || charDest.lenght > 4) {
             continue;
-		} else if (data[1] == 'kTraditionalVariant' && readings[charDest] && !readings[charSrc]) {
+		}
+		if (data[1] == 'kTraditionalVariant' && readings[charDest] && !readings[charSrc]) {
             tradVariants[charSrc] = charDest;
 		}
+		console.log(line);
 	}
     return tradVariants;
 }
