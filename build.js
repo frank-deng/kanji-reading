@@ -1,11 +1,3 @@
-const fs = require('fs');
-const StringDecoder = require('string_decoder');
-const Sha256 = require('js-sha256');
-function sha256sum(filename){
-	var data = new StringDecoder.StringDecoder('utf8').write(fs.readFileSync(filename));
-	return Sha256.sha256(data);
-}
-
 const webpack = require('webpack');
 function webpackErrorHandler(err, stats){
 	if (err) {
@@ -41,7 +33,6 @@ webpack({
 }, (err, stats) => {
 	webpackErrorHandler(err, stats);
 	require('./gendata.temp');
-	var sha256readings = sha256sum('./readings.txt');
 	webpack({
 		mode: 'production',
 		entry: {
@@ -65,12 +56,8 @@ webpack({
 		resolveLoader: {
 			alias: {
 				'css-loader': __dirname + "/app/css-loader.js",
+				'sha256-loader': __dirname + "/app/sha256-loader.js",
 			},
 		},
-		plugins: [
-			new webpack.DefinePlugin({
-				READINGS_SHA256: sha256readings,
-			}),
-		],
 	}, webpackErrorHandler);
 });
