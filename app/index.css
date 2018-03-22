@@ -1,4 +1,4 @@
-*:focus{
+input, *:focus{
 	outline:none;
 }
 table{
