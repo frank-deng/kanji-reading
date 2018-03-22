@@ -21,14 +21,6 @@ export const Lang = function(data){
 		return data[lang];
 	}
 }
-export const base62Encode = function(str) {
-	var DATA = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var n = 0, len = str.length;
-	for(var i = 0; i < len; i++){
-		n = n * 62 + DATA.indexOf(str[i]);
-	}
-	return n;
-}
 export const base62Decode = function(str) {
 	var DATA = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var n = 0, len = str.length;
