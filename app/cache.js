@@ -1,5 +1,5 @@
 const localStorageKey = 'kanji-readings';
-const localStorageSum = require("!sha256-loader?filename=./readings.txt!");
+const localStorageSum = READINGS_SHA256_SUM;
 
 import sha256 from 'js-sha256';
 export const loadReadings = function() {
