@@ -1,4 +1,3 @@
-const Sha256 = require('js-sha256');
 const fs = require("fs");
 
 const webpack = require('webpack');

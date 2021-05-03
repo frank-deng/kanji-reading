@@ -172,7 +172,6 @@ var drawRecords = function(dom,text){
 
 //Load kanji readings data
 window.addEventListener('load', function(){
-	d.body.removeAttribute('loading');
 	var kanji_search = d.getElementById('kanji_search');
 	var search_result = d.getElementById('search_result');
 	kanji_search.setAttribute('placeholder', lang.get('prompt'));
