@@ -24,19 +24,20 @@ webpack({
 	mode: 'production',
 	target: "node",
 	entry: {
-		index: __dirname + '/data/gendata.js',
+		index: __dirname + '/data/index.js',
 	},
 	output: {
 		path: __dirname,
 		filename: 'gendata.temp.js',
+		library: 'gendata',
+		libraryTarget: 'umd',
 	},
 	optimization: {
 		minimize: false,
 	},
 }, (err, stats) => {
 	webpackErrorHandler(err, stats);
-	var gendata = require('./gendata.temp');
-	var READINGS_SHA256_SUM = Sha256.sha256(fs.readFileSync('./readings.txt', 'utf-8'));
+	var gendata = require('./gendata.temp').default();
 	webpack({
 		mode: 'production',
 		entry: {
@@ -57,14 +58,10 @@ webpack({
 				},
 			],
 		},
-		resolveLoader: {
-			alias: {
-				'css-loader': __dirname + "/app/css-loader.js",
-			},
-		},
 		plugins: [
 			new webpack.DefinePlugin({
-				'READINGS_SHA256_SUM': `\"${READINGS_SHA256_SUM}\"`,
+				'READINGS_DATA': '\"'+gendata.r+'\"',
+				'VARIANTS_DATA': '\"'+gendata.v+'\"'
 			}),
 		],
 	}, webpackErrorHandler);

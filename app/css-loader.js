@@ -1,9 +1,7 @@
-const loaderUtils = require("loader-utils");
 module.exports = function(content){
-	const { filename } = loaderUtils.getOptions(this);
 	var fs = require("fs");
 	var CleanCSS = require('clean-css');
-	var css = new CleanCSS().minify(fs.readFileSync(filename));
+	var css = new CleanCSS().minify(content);
 	var result = `
 		var cssCode = "${css.styles}";
 		var styleElement = document.createElement("style");

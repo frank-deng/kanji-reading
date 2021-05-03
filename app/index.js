@@ -1,7 +1,6 @@
 import {Lang, base62Decode} from './util';
 import {kanaToRomaji, extractKanaData} from './kana';
-import {loadReadings, saveReadings} from './cache';
-import "!css-loader?filename=./app/index.css!";
+import "./css-loader!./index.css";
 
 /* Master classes */
 function KanjiReading(data) {
@@ -70,34 +69,28 @@ function KanjiReading(data) {
 		return result;
 	}
 }
-
 function processData(inputData){
-	var data = [];
-	data = inputData.split("\n");
-	var dataLen = data.length;
-	var result = {'r':[], 'v':[]};
-	var task = undefined;
+	var result = {r:[], v:[]};
+	var rdata=READINGS_DATA.split('~');
+	var dataLen = rdata.length;
 	for (var i = 0; i < dataLen; i++){
-		var text = data[i];
-		if (text == '[Readings]') {
-			task = 'r';
-		} else if (text == '[Variants]') {
-			task = 'v';
-		} else if (task == 'r') {
-			var kanji = base62Decode(text.slice(0,3)).toString(16).toUpperCase();
-			var reading = text.slice(3).split('\t');
-			result['r'][kanji] = {}
-			if (reading[0]) {
-				result['r'][kanji]['on'] = extractKanaData(reading[0].split(','));
-			}
-			if (reading[1]) {
-				result['r'][kanji]['kun'] = extractKanaData(reading[1].split(','));
-			}
-		} else if (task == 'v') {
-			var charSrc = base62Decode(text.slice(0,3)).toString(16).toUpperCase();
-			var charDest = base62Decode(text.slice(3,6)).toString(16).toUpperCase();
-			result['v'][charSrc] = charDest;
+		var text = rdata[i];
+		var kanji = base62Decode(text.slice(0,3)).toString(16).toUpperCase();
+		var reading = text.slice(3).split('|');
+		result.r[kanji] = {}
+		if (reading[0]) {
+			result.r[kanji]['on'] = extractKanaData(reading[0].split(','));
 		}
+		if (reading[1]) {
+			result.r[kanji]['kun'] = extractKanaData(reading[1].split(','));
+		}
+	}
+	var vdata=VARIANTS_DATA;
+	dataLen=vdata.length;
+	for (var i = 0; i < dataLen; i+=6){
+		var charSrc = base62Decode(vdata.slice(i,i+3)).toString(16).toUpperCase();
+		var charDest = base62Decode(vdata.slice(i+3,i+6)).toString(16).toUpperCase();
+		result.v[charSrc] = charDest;
 	}
 	return result;
 }
@@ -126,7 +119,7 @@ var lang = new Lang({
 var d = document;
 d.title = lang.get('title');
 
-var kanjiReading = undefined;
+var kanjiReading = new KanjiReading(processData());
 var drawReadings = function(td, readings){
 	for (var i=0; i<readings.length; i++) {
 		var span = d.createElement('span');
@@ -178,28 +171,8 @@ var drawRecords = function(dom,text){
 }
 
 //Load kanji readings data
-var readingsData = loadReadings();
-if (readingsData) {
-	kanjiReading = new KanjiReading(processData(readingsData));
-} else {
-	var xhr=new XMLHttpRequest();
-	xhr.addEventListener('readystatechange', function(){
-		if (this.readyState == 4 && this.status == 200) {
-			if (d.body) {
-				d.body.removeAttribute('loading');
-			}
-			saveReadings(this.response);
-			kanjiReading = new KanjiReading(processData(this.response));
-		}
-	});
-	xhr.open('GET', 'readings.txt');
-	xhr.send();
-}
-
 window.addEventListener('load', function(){
-	if (kanjiReading) {
-		d.body.removeAttribute('loading');
-	}
+	d.body.removeAttribute('loading');
 	var kanji_search = d.getElementById('kanji_search');
 	var search_result = d.getElementById('search_result');
 	kanji_search.setAttribute('placeholder', lang.get('prompt'));
