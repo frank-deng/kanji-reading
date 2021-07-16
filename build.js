@@ -51,7 +51,10 @@ webpack({
 				{
 					test: /(\.jsx|\.js)$/,
 					use: {
-						loader: "babel-loader"
+						loader: "babel-loader",
+						options: {
+						  presets: ["@babel/preset-env"]
+						}
 					},
 					exclude: /node_modules/
 				},
