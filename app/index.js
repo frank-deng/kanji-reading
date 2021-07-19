@@ -1,57 +1,80 @@
 import {Lang, base62Decode} from './util';
 import {kanaToRomaji, extractKanaData} from './kana';
-import "./css-loader!./index.css";
 
 /* Master classes */
-function KanjiReading(data) {
-	var kanjiData = data;
-	var getKanjiReading = function(character) {
-		var kanjiCode = character.charCodeAt(0).toString(16).toUpperCase();
+function KanjiReading(data){
+	this.kanjiData = data;
+}
+let KanjiReadingPrototype=KanjiReading.prototype;
+KanjiReadingPrototype.getKanjiReading=function(character){
+	let kanjiCode = character.charCodeAt(0).toString(16).toUpperCase(), kanjiVariantCode=null;
+	let kanjiReading = this.kanjiData.r[kanjiCode];
 
-		//Kanji found
-		var kanjiReading = kanjiData.r[kanjiCode];
+	//If current character not found, find it's corresponding variant character
+	if(!kanjiReading){
+		kanjiVariantCode = this.kanjiData.v[kanjiCode];
+		kanjiReading = this.kanjiData.r[kanjiVariantCode];
+	}
+
+	//Reading info not found
+	if (!kanjiReading) {
+		return undefined;
+	}
+
+	//Reading info found
+	return {
+		kanji:(kanjiVariantCode ? String.fromCharCode(parseInt(kanjiVariantCode, 16)) : character),
+		origInput: kanjiVariantCode ? character : null,
+		on:kanjiReading.on,
+		kun:kanjiReading.kun
+	};
+}
+KanjiReadingPrototype.getFromText=function(text){
+	if ('string' !== typeof text) {
+		return undefined;
+	}
+	var result = {};
+	for (var i = 0; i < text.length; i++) {
+		var kanji = text.charAt(i);
+		if (result[kanji]) {
+			continue;
+		}
+		var kanjiReading = this.getKanjiReading(kanji);
 		if (kanjiReading) {
-			var result = {};
-			if (kanjiReading.on) {
-				result['on'] = [];
-				for (var i = 0; i < kanjiReading.on.length; i++){
-					result['on'].push(kanjiReading.on[i]);
-				}
-			}
-			if (kanjiReading.kun) {
-				result['kun'] = [];
-				for (var i = 0; i < kanjiReading.kun.length; i++){
-					result['kun'].push(kanjiReading.kun[i]);
-				}
-			}
-			result['kanji'] = character;
-			return result;
+			result[kanji] = kanjiReading;
+		}
+	}
+	return result;
+}
+/*
+class KanjiReading{
+	constructor(data){
+		this.kanjiData = data;
+	}
+	getKanjiReading(character) {
+		let kanjiCode = character.charCodeAt(0).toString(16).toUpperCase(), kanjiVariantCode=null;
+		let kanjiReading = this.kanjiData.r[kanjiCode];
+
+		//If current character not found, find it's corresponding variant character
+		if(!kanjiReading){
+			kanjiCode = kanjiVariantCode = this.kanjiData.v[kanjiCode];
+			kanjiReading = this.kanjiData.r[kanjiVariantCode];
 		}
 
-		//Character with Kanji variant found
-		var kanjiCode = kanjiData.v[kanjiCode];
-		if (!kanjiCode) {
+		//Reading info not found
+		if (!kanjiReading) {
 			return undefined;
 		}
 
-		kanjiReading = kanjiData.r[kanjiCode];
-		if (kanjiReading) {
-			var result = {
-				kanji:String.fromCharCode(parseInt(kanjiCode, 16)),
-				origInput:character,
-			};
-			if (kanjiReading.on) {
-				result['on'] = kanjiReading.on;
-			}
-			if (kanjiReading.kun) {
-				result['kun'] = kanjiReading.kun;
-			}
-			return result;
-		}
-
-		return undefined;
+		//Reading info found
+		return {
+			kanji:(kanjiVariantCode ? String.fromCharCode(parseInt(kanjiCode, 16)) : character),
+			origInput: kanjiVariantCode ? character : null,
+			on:kanjiReading.on,
+			kun:kanjiReading.kun
+		};
 	}
-	this.getFromText = function(text) {
+	getFromText(text){
 		if ('string' !== typeof text) {
 			return undefined;
 		}
@@ -61,7 +84,7 @@ function KanjiReading(data) {
 			if (result[kanji]) {
 				continue;
 			}
-			var kanjiReading = getKanjiReading(kanji);
+			var kanjiReading = this.getKanjiReading(kanji);
 			if (kanjiReading) {
 				result[kanji] = kanjiReading;
 			}
@@ -69,6 +92,7 @@ function KanjiReading(data) {
 		return result;
 	}
 }
+*/
 function processData(inputData){
 	var result = {r:[], v:[]};
 	var rdata=READINGS_DATA.split('~');
@@ -175,14 +199,11 @@ window.addEventListener('load', function(){
 	var kanji_search = d.getElementById('kanji_search');
 	var search_result = d.getElementById('search_result');
 	kanji_search.setAttribute('placeholder', lang.get('prompt'));
-	kanji_search.addEventListener('input', function(){
+	function handler(){
 		drawRecords(search_result, this.value);
-	});
-	kanji_search.addEventListener('change', function(){
-		drawRecords(search_result, this.value);
-	});
-	kanji_search.addEventListener('blur', function(){
-		drawRecords(search_result, this.value);
-	});
+	}
+	kanji_search.addEventListener('input', handler);
+	kanji_search.addEventListener('change', handler);
+	kanji_search.addEventListener('blur', handler);
 });
 

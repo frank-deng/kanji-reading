@@ -1,0 +1,105 @@
+input, *:focus{
+	outline:none;
+}
+table{
+	border-collapse:collapse;
+	border-spacing:0;
+}
+td,th{
+	font-weight:normal;
+	text-align:left;
+	vertical-align:top;
+	padding:0;
+	line-height:18px;
+}
+b,i,u{
+	text-decoration:none;
+	font-weight:normal;
+	font-style:normal;
+}
+body{
+	position:fixed;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	margin:0;
+	padding:0;
+	color:#562135;
+	background-color:#ffe7de;
+	font-family:微软雅黑,Sans;
+	font-size:16px;
+	overflow:hidden;
+}
+.container-main{
+	position:absolute;
+	margin:0;
+	padding:10px;
+	left:0;
+	right:0;
+	top:0;
+	background-color:#c3829e;
+}
+#kanji_search{
+	border:none;
+	margin:0;
+	padding:0 5px;
+	width:calc(100% - 10px);
+	line-height:28px;
+	height:28px;
+	font-size:16px;
+	color:#562135;
+	background:#ffe7de;
+	border-radius:4px;
+	&::-webkit-input-placeholder{
+		color:#c3829e;
+	}
+	&::-moz-input-placeholder{
+		color:#c3829e;
+	}
+	&:-webkit-autofill{
+		-webkit-box-shadow:0 0 0px 1000px #ffe7de inset!important;
+		-webkit-text-fill-color:#562135;
+	}
+	&:-webkit-autofill:focus{
+		-webkit-box-shadow:0 0 0px 1000px #ffe7de inset!important;
+		-webkit-text-fill-color:#562135;
+	}
+}
+#search_result{
+	padding:0 10px;
+	overflow:auto;
+	position:absolute;
+	left:0;
+	right:0;
+	bottom:0;
+	top:48px;
+	h3{
+		padding:0 0 8px 0;
+		margin:0;
+		font-size:18px;
+		i{
+			font-size:14px;
+			font-weight:bold;
+			color:#c3829e;
+		}
+	}
+	p{
+		margin:12px 0;
+		padding:0;
+	}
+	th{
+		white-space:nowrap;
+		padding:0 8px 4px 0;
+	}
+	td{
+		padding:0 0 4px 0;
+	}
+	table span{
+		display:inline-block;
+		margin:0 8px 0 0;
+		u{
+			font-size:50%;
+		}
+	}
+}
