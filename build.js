@@ -89,6 +89,14 @@ webpack({
 			  template: path.resolve(__dirname,'app/index.ejs'),
 			  inject: false
 			}),
+			new HtmlWebpackPlugin({
+			  filename: path.resolve(__dirname,'kanji-reading.html'),
+			  template: path.resolve(__dirname,'app/index.ejs'),
+			  inject: false,
+			  meta:{
+				fromLocal:true
+			  }
+			}),
 			new webpack.DefinePlugin({
 				'READINGS_DATA': '\"'+gendata.r+'\"',
 				'VARIANTS_DATA': '\"'+gendata.v+'\"'
