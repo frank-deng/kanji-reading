@@ -85,7 +85,8 @@ webpack({
 		plugins: [
 			new HtmlWebpackPlugin({
 			  filename: path.resolve(__dirname,'index.html'),
-			  template: path.resolve(__dirname,'app/index.ejs')
+			  template: path.resolve(__dirname,'app/index.ejs'),
+			  inject:'body'
 			}),
 			new webpack.DefinePlugin({
 				'READINGS_DATA': '\"'+gendata.r+'\"',

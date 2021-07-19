@@ -194,16 +194,13 @@ var drawRecords = function(dom,text){
 	}
 }
 
-//Load kanji readings data
-window.addEventListener('load', function(){
-	var kanji_search = d.getElementById('kanji_search');
-	var search_result = d.getElementById('search_result');
-	kanji_search.setAttribute('placeholder', lang.get('prompt'));
-	function handler(){
-		drawRecords(search_result, this.value);
-	}
-	kanji_search.addEventListener('input', handler);
-	kanji_search.addEventListener('change', handler);
-	kanji_search.addEventListener('blur', handler);
-});
-
+var kanji_search = d.getElementById('kanji_search');
+var search_result = d.getElementById('search_result');
+kanji_search.setAttribute('placeholder', lang.get('prompt'));
+function handler(){
+	drawRecords(search_result, kanji_search.value);
+}
+kanji_search.addEventListener('input', handler);
+kanji_search.addEventListener('change', handler);
+kanji_search.addEventListener('blur', handler);
+handler();
