@@ -1,4 +1,4 @@
-import {Lang, base62Decode} from './util';
+import {base62Decode} from './util';
 import {kanaToRomaji, extractKanaData} from './kana';
 
 /* Master classes */
@@ -46,53 +46,6 @@ KanjiReadingPrototype.getFromText=function(text){
 	}
 	return result;
 }
-/*
-class KanjiReading{
-	constructor(data){
-		this.kanjiData = data;
-	}
-	getKanjiReading(character) {
-		let kanjiCode = character.charCodeAt(0).toString(16).toUpperCase(), kanjiVariantCode=null;
-		let kanjiReading = this.kanjiData.r[kanjiCode];
-
-		//If current character not found, find it's corresponding variant character
-		if(!kanjiReading){
-			kanjiCode = kanjiVariantCode = this.kanjiData.v[kanjiCode];
-			kanjiReading = this.kanjiData.r[kanjiVariantCode];
-		}
-
-		//Reading info not found
-		if (!kanjiReading) {
-			return undefined;
-		}
-
-		//Reading info found
-		return {
-			kanji:(kanjiVariantCode ? String.fromCharCode(parseInt(kanjiCode, 16)) : character),
-			origInput: kanjiVariantCode ? character : null,
-			on:kanjiReading.on,
-			kun:kanjiReading.kun
-		};
-	}
-	getFromText(text){
-		if ('string' !== typeof text) {
-			return undefined;
-		}
-		var result = {};
-		for (var i = 0; i < text.length; i++) {
-			var kanji = text.charAt(i);
-			if (result[kanji]) {
-				continue;
-			}
-			var kanjiReading = this.getKanjiReading(kanji);
-			if (kanjiReading) {
-				result[kanji] = kanjiReading;
-			}
-		}
-		return result;
-	}
-}
-*/
 function processData(inputData){
 	var result = {r:[], v:[]};
 	var rdata=READINGS_DATA.split('~');
@@ -120,30 +73,8 @@ function processData(inputData){
 }
 
 /* View handling */
-var lang = new Lang({
-	en : {
-		title:'Japanese Kanji Readings',
-		prompt:'Input Kanji',
-		onReading:'On Reading:',
-		kunReading:'Kun Reading:',
-	},
-	zh : {
-		title:'日文汉字读音查询工具',
-		prompt:'请输入待查询的汉字',
-		onReading:'音读:',
-		kunReading:'训读:',
-	},
-	ja : {
-		title:'漢字の読み方',
-		prompt:'漢字を入力してください',
-		onReading:'音読み:',
-		kunReading:'訓読み:',
-	},
-});
-var d = document;
-d.title = lang.get('title');
-
 var kanjiReading = new KanjiReading(processData());
+var d = document;
 var drawReadings = function(td, readings){
 	for (var i=0; i<readings.length; i++) {
 		var span = d.createElement('span');
@@ -194,9 +125,9 @@ var drawRecords = function(dom,text){
 	}
 }
 
+//Main logic when this js loaded
 var kanji_search = d.getElementById('kanji_search');
 var search_result = d.getElementById('search_result');
-kanji_search.setAttribute('placeholder', lang.get('prompt'));
 function handler(){
 	drawRecords(search_result, kanji_search.value);
 }

@@ -41,11 +41,12 @@ webpack({
 	webpack({
 		mode: 'production',
 		entry: {
-			index: __dirname + '/app/index.js',
+			preload: './app/preload.js',
+			index: './app/index.js',
 		},
 		output: {
 			path: __dirname,
-			filename: 'index.min.js',
+			filename: '[name].min.js',
 		},
 		module: {
 			rules: [
@@ -86,7 +87,7 @@ webpack({
 			new HtmlWebpackPlugin({
 			  filename: path.resolve(__dirname,'index.html'),
 			  template: path.resolve(__dirname,'app/index.ejs'),
-			  inject:'body'
+			  inject: false
 			}),
 			new webpack.DefinePlugin({
 				'READINGS_DATA': '\"'+gendata.r+'\"',

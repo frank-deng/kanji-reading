@@ -12,6 +12,8 @@
 		<div class='container-main'>
 			<input type='text' id='kanji_search' autofocus='autofocus'/>
 		</div>
-		<div id='search_result'><p>Loading...</p></div>
+		<div id='search_result'><p id='loading_text'></p></div>
+		<script><%=compilation.assets['preload.min.js'].source()%></script>
+		<script src='index.min.js' defer='defer'></script>
 	</body>
 </html>

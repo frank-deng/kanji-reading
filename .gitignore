@@ -58,4 +58,4 @@ typings/
 .env
 
 gendata.temp.js
-
+preload.min.js
